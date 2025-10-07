@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Auth Page</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background: #f5f5f5;
+      }
+      section {
+        background: white;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+      h2 {
+        margin-top: 0;
+      }
+      input,
+      select,
+      button {
+        margin: 5px 0;
+        padding: 8px;
+        width: 100%;
+        box-sizing: border-box;
+      }
+      textarea {
+        width: 100%;
+        height: 150px;
+        margin-top: 10px;
+        font-family: monospace;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Auth Page</h1>
+
+    <!-- SIGN UP -->
+    <section>
+      <h2>Sign Up</h2>
+      <input id="su-username" placeholder="Username" />
+      <input id="su-email" type="email" placeholder="Email" />
+      <input id="su-password" type="password" placeholder="Password" />
+      <input id="su-phone" placeholder="Phone (opcional)" />
+      <select id="su-role" onchange="toggleFields()">
+        <option value="Volunteer">Volunteer</option>
+        <option value="Coordinator">Coordinator</option>
+      </select>
+
+      <div id="volunteer-fields">
+        <input id="su-availability" placeholder="Availability (ej: Lunes)" />
+        <input id="su-speciality" placeholder="Speciality" />
+        <input id="su-hours" placeholder="Hours contributed (opcional)" />
+      </div>
+
+      <div id="coordinator-fields" style="display: none">
+        <input id="su-position" placeholder="Position" />
+      </div>
+
+      <button onclick="signUp()">Sign Up</button>
+    </section>
+
+    <!-- SIGN IN -->
+    <section>
+      <h2>Sign In</h2>
+      <input id="si-email" type="email" placeholder="Email" />
+      <input id="si-password" type="password" placeholder="Password" />
+      <button onclick="signIn()">Sign In</button>
+    </section>
+
+    <!-- RESPUESTA -->
+    <section>
+      <h2>Respuesta</h2>
+      <textarea id="responseBox" readonly></textarea>
+    </section>
+
+    <script>
+      function toggleFields() {
+        const role = document.getElementById("su-role").value;
+        document.getElementById("volunteer-fields").style.display =
+          role === "Volunteer" ? "block" : "none";
+        document.getElementById("coordinator-fields").style.display =
+          role === "Coordinator" ? "block" : "none";
+      }
+
+      async function signUp() {
+        const body = {
+          username: document.getElementById("su-username").value,
+          email: document.getElementById("su-email").value,
+          password: document.getElementById("su-password").value,
+          phone: document.getElementById("su-phone").value,
+          role: document.getElementById("su-role").value,
+        };
+
+        if (body.role === "Volunteer") {
+          body.availability = document.getElementById("su-availability").value;
+          body.speciality = document.getElementById("su-speciality").value;
+          const hours = document.getElementById("su-hours").value;
+          if (hours) body.hoursContributed = parseInt(hours);
+        } else if (body.role === "Coordinator") {
+          body.position = document.getElementById("su-position").value;
+        }
+
+        const res = await fetch("/api/auth/sign-up", {
+          method: "POST",
+          credentials: "include", 
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+
+        const data = await res.json();
+        showResponse(data);
+      }
+
+      async function signIn() {
+        const email = document.getElementById("si-email").value;
+        const password = document.getElementById("si-password").value;
+
+        const res = await fetch("/api/auth/sign-in", {
+          method: "POST",
+          credentials: "include", 
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+
+        const data = await res.json();
+        showResponse(data);
+      }
+
+      function showResponse(data) {
+        document.getElementById("responseBox").value = JSON.stringify(
+          data,
+          null,
+          2
+        );
+      }
+    </script>
+  </body>
+</html>
+
