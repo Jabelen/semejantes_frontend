@@ -1,0 +1,10 @@
+.row{
+    display: flex; /*cosas con clase row se hacen tipo flexible*/
+    flex-direction: row; /**/
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.header-text{
+    font-size: 20px;
+}
