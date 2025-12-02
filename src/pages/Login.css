@@ -1,0 +1,87 @@
+/* Contenedor principal para centrar el formulario */
+.login-container {
+  display: flex;
+  justify-content: center; /* Centrado horizontal */
+  align-items: center; /* Centrado vertical */
+  min-height: 100vh; /* Ocupa el alto completo de la ventana (viewport height) */
+  background-color: #f0f2f5; /* Un fondo suave */
+  font-family: Arial, sans-serif;
+}
+
+/* Estilos del formulario */
+.login-form {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  width: 100%;
+  max-width: 400px; /* Ancho máximo para que no se extienda demasiado */
+}
+
+.login-form h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #333;
+}
+
+/* Estilos para cada grupo de formulario (etiqueta + input) */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block; /* La etiqueta ocupa su propia línea */
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #555;
+  font-size: 14px;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box; /* Asegura que el padding no afecte el ancho total */
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+  border-color: #007bff; /* Color de borde al enfocar */
+  outline: none; /* Elimina el contorno por defecto del navegador */
+}
+
+/* Estilos del botón de envío */
+.login-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #007bff; /* Color primario azul */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #0056b3; /* Tono más oscuro al pasar el ratón */
+}
+
+/* Estilos del pie de página o enlaces adicionales */
+.form-footer {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.form-footer a {
+  color: #007bff;
+  text-decoration: none; /* Quita el subrayado */
+  font-size: 14px;
+}
+
+.form-footer a:hover {
+  text-decoration: underline; /* Añade subrayado al pasar el ratón */
+}
