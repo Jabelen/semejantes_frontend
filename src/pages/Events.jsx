@@ -9,7 +9,8 @@ export default function Events() {
                 <Header/>
             </div>
             <div>
-                <EventCard event="Ruedas para Chile" direction="Av. Avenida 9876, Ciudad" hrI="09" mnI="00" hrT="19" mnT="30" rutaImg=""/>
+                <EventCard event="Ruedas para Chile" direction="Av. Avenida 9876, Ciudad" hrI="09" mnI="00" hrT="19" mnT="30" 
+                rutaImg="/src/assets/logo_semejantes.png"/>
             </div>
             <div>
                 <FloatingButton/>
