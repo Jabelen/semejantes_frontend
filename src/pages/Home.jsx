@@ -15,7 +15,7 @@ function Home() {
       </div>
       <div>
         <h2>ONG Semejantes</h2>
-        <h1>Integrando a personas con discpacidad</h1>
+        <h1>Integrando a personas con discapacidad</h1>
         <h2>Porque cada persona es valiosa, amada y tiene propósito en Dios</h2>
       </div>
       <div>
