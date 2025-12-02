@@ -14,14 +14,19 @@ import Alliance from './pages/Alliance.jsx';
 import Donations from './pages/Donations.jsx';
 import BaseBeneficiary from './pages/BaseBeneficiary.jsx';
 import BaseEvents from './pages/BaseEvents.jsx';
-//import { AuthProvider } from '@/hooks/use-auth'
+import Login from './pages/Login.jsx'
+import Register from './pages/Register.jsx';
 
 
 createRoot(document.getElementById('root')).render(
+  //const [authed, setAuthed] = useState('login')
   <StrictMode>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home/>} />
+        <Route path='login' element= {<Login/>}/>
+        <Route path="login/forgot-password" element={<Base/>} />
+        <Route path="create-account" element={<Register/>} />
         <Route path="about" element={<About />} />
         <Route path="base" element={<Base/>} />
         <Route path="base/donations" element={<BaseDonations/>} />
