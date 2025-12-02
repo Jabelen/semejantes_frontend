@@ -8,7 +8,7 @@ export default function Header() {
             <nav>
                 <div className="row">
                     <img src= {logoSemejantes} alt="Company Logo" className="logo" />
-                    <HeaderButton href="./" headerText="Inicio"/>
+                    <HeaderButton href="/" headerText="Inicio"/>
                     <HeaderButton href="/about" headerText="Quiénes Somos"/>
                     <HeaderButton href="/services" headerText="Qué hacemos"/>
                     <HeaderButton href="/events" headerText="Eventos"/>
