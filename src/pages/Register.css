@@ -1,0 +1,97 @@
+/* Contenedor principal para centrar el formulario */
+.signup-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #e9ecef; /* Un fondo ligeramente diferente para distinguir */
+  font-family: Arial, sans-serif;
+  padding: 20px 0; /* Espacio vertical si la pantalla es pequeña */
+}
+
+/* Estilos del formulario */
+.signup-form {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Sombra más pronunciada */
+  width: 100%;
+  max-width: 450px; /* Un poco más ancho ya que tiene más campos */
+}
+
+.signup-form h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #2c3e50;
+}
+
+/* Estilos para cada grupo de formulario (etiqueta + input/select) */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: #34495e;
+  font-size: 14px;
+}
+
+/* Estilos para campos de texto y el desplegable (select) */
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 16px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  background-color: #f8f9fa;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #28a745; /* Color verde para el foco */
+  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+  outline: none;
+  background-color: #ffffff;
+}
+
+/* Estilos del botón de envío */
+.signup-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #28a745; /* Color primario verde (éxito) */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+  margin-top: 10px;
+}
+
+.signup-button:hover {
+  background-color: #1e7e34; /* Tono más oscuro al pasar el ratón */
+}
+
+/* Estilos del pie de página o enlaces adicionales */
+.form-footer {
+  text-align: center;
+  margin-top: 25px;
+  font-size: 14px;
+  color: #6c757d;
+}
+
+.form-footer a {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.form-footer a:hover {
+  text-decoration: underline;
+}
