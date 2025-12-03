@@ -1,0 +1,88 @@
+.dash-home-container {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 20px 0;
+  text-align: center;
+  font-family: "Segoe UI", sans-serif; /* O la fuente que uses estilo "handwritten" si tienes */
+}
+
+.org-subtitle {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 0;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.org-title {
+  font-size: 3.5rem;
+  line-height: 1.1;
+  color: #000;
+  margin: 10px 0 20px 0;
+  font-weight: 900; /* Letra muy gruesa como el dibujo */
+}
+
+.org-quote-container {
+  display: inline-block;
+  background-color: #fffacd; /* Amarillo suave tipo resaltador */
+  padding: 5px 20px;
+  transform: rotate(-1deg); /* Un toque "manual" */
+  margin-bottom: 20px;
+}
+
+.org-quote {
+  font-size: 1.2rem;
+  color: #333;
+  font-style: italic;
+  margin: 0;
+}
+
+/* Grilla de Botones */
+.quick-actions-grid {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.action-card {
+  background: white;
+  border: 3px solid #000; /* Borde negro grueso como el dibujo */
+  border-radius: 0; /* Cuadrados */
+  padding: 20px 40px;
+  width: 250px;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.2); /* Sombra sólida */
+}
+
+.action-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0px rgba(0, 0, 0, 0.2);
+  background-color: #f8f9fa;
+}
+
+.card-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.card-icon {
+  font-size: 1.5rem;
+  margin-top: 5px;
+}
+
+.dash-slider-section {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  border: 2px solid #333;
+  padding: 10px;
+}

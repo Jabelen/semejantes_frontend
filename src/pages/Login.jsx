@@ -1,79 +1,99 @@
-import React, { useState } from 'react';
-import './Login.css'; // Importa los estilos CSS
-import Header from '../components/Header';
+import React, { useState } from "react";
+import { useNavigate } from "react-router"; // Para redirigir al usuario
+import "./Login.css";
+import Header from "../components/Header";
 
 const Login = () => {
-  // Estados para almacenar los valores de los campos de entrada
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate(); // Hook de navegación
 
-  // Función para manejar el envío del formulario
-  const handleSubmit = (e) => {
-    e.preventDefault(); // Previene la recarga de la página por defecto
-    
-    // Aquí es donde típicamente se enviaría la información a un servidor.
-    // Por ahora, solo mostraremos los valores en la consola.
-    console.log('Formulario enviado:', { email, password });
+  // Obtenemos la URL de la API desde las variables de entorno (.env)
+  const API_URL = import.meta.env.VITE_API_URL;
 
-    // Lógica de autenticación iría aquí...
-    alert(`Intentando iniciar sesión con: ${email}`); 
-    
-    // Opcionalmente, limpiar los campos después del envío:
-    // setEmail('');
-    // setPassword('');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      // 1. Hacemos la petición al Backend
+      const response = await fetch(`${API_URL}/api/auth/sign-in`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+
+      // 2. Verificamos si hubo error
+      if (!response.ok) {
+        // Si el backend dice "fail", mostramos el mensaje (ej: "Tu cuenta aún no ha sido aprobada")
+        alert(data.message || "Error al iniciar sesión");
+        return;
+      }
+
+      // 3. ÉXITO: Guardamos el token y datos del usuario
+      // Esto es clave para que las siguientes peticiones funcionen
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      // 4. Redirigir al usuario a la zona privada (ej: /base o /home)
+      alert("¡Bienvenido!");
+      navigate("/base");
+    } catch (error) {
+      console.error("Error de conexión:", error);
+      alert("No se pudo conectar con el servidor. Revisa tu conexión.");
+    }
   };
 
   return (
     <>
-        <div>
-            <Header/>
-        </div>
-        <div className="login-container">
+      <div>
+        <Header />
+      </div>
+      <div className="login-container">
         <form className="login-form" onSubmit={handleSubmit}>
-            <h2>Iniciar Sesión</h2>
-            
-            <div className="form-group">
+          <h2>Iniciar Sesión</h2>
+
+          <div className="form-group">
             <label htmlFor="email">Correo Electrónico:</label>
             <input
-                type="email"
-                id="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                placeholder="ejemplo@dominio.com"
+              type="email"
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              placeholder="ejemplo@dominio.com"
             />
-            </div>
+          </div>
 
-            <div className="form-group">
+          <div className="form-group">
             <label htmlFor="password">Contraseña:</label>
             <input
-                type="password"
-                id="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                placeholder="Introduce tu contraseña"
+              type="password"
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              placeholder="Introduce tu contraseña"
             />
-            </div>
+          </div>
 
-            <button type="submit" className="login-button">
+          <button type="submit" className="login-button">
             Entrar
-            </button>
+          </button>
 
-            <div className="form-footer">
-            <a href="/forgot-password">¿Olvidaste tu contraseña? </a>
-            </div>
-            <div className="form-footer">
+          <div className="form-footer">
+            <a href="/login/forgot-password">¿Olvidaste tu contraseña? </a>
+          </div>
+          <div className="form-footer">
             <a href="/create-account"> Crear nueva cuenta</a>
-            </div>
+          </div>
         </form>
-        </div>
+      </div>
     </>
   );
 };
 
 export default Login;
-
-// Para usarlo, solo tienes que importarlo en tu componente principal (ej. App.js):
-// import LoginForm from './LoginForm';
-// function App() { return <LoginForm />; }
