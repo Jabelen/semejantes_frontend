@@ -5,10 +5,12 @@ import Header from "../components/Header";
 import Profile from "./Profile";
 
 // Importamos los módulos
-import DashboardHome from "../components/dashboard/DashboardHome"; // <--- IMPORTAR
+import DashboardHome from "../components/dashboard/DashboardHome";
 import EventsManager from "../components/dashboard/EventsManager";
 import RequestsManager from "../components/dashboard/RequestsManager";
 import DonationsManager from "../components/dashboard/DonationsManager";
+import UsersManager from "../components/dashboard/UsersManager";
+import ReportsManager from "../components/dashboard/ReportsManager";
 
 import "../components/BurgerMenu.css";
 import "./Base.css";
@@ -74,6 +76,8 @@ export default function Base() {
           {view === "events" && <EventsManager userRole={user.role} />}
           {view === "requests" && <RequestsManager userRole={user.role} />}
           {view === "donations" && <DonationsManager userRole={user.role} />}
+          {view === "users" && <UsersManager />}
+          {view === "reports" && <ReportsManager />}
           {view === "reports" && <h1>Reportes</h1>}
         </div>
       </main>

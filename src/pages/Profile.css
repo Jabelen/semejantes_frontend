@@ -1,173 +1,140 @@
 .profile-wrapper {
-  max-width: 800px;
-  margin: 40px auto;
-  padding: 0 20px;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 10px;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif; /* Fuente tipo "mano" si tienes, mejor */
 }
 
-/* --- Tarjeta de Usuario (Arriba) --- */
+/* --- TARJETA USUARIO --- */
 .user-info-card {
   display: flex;
+  border: 3px solid #000; /* Borde negro grueso del dibujo */
+  padding: 20px;
   background: white;
-  border: 2px solid #333; /* Borde negro estilo dibujo */
-  border-radius: 8px;
-  padding: 30px;
-  gap: 40px;
+  margin-bottom: 20px;
+  position: relative;
   align-items: center;
-  box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.1); /* Sombra sólida */
 }
 
 .avatar-section {
+  width: 120px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  margin-right: 20px;
+  position: relative;
 }
 
 .avatar-circle {
   width: 100px;
   height: 100px;
-  background-color: #0066cc;
-  color: white;
+  border: 3px solid #000;
   border-radius: 50%;
   display: flex;
-  justify-content: center;
   align-items: center;
-  font-size: 2.5rem;
+  justify-content: center;
+  text-align: center;
   font-weight: bold;
-  border: 3px solid #333;
+  color: #0066cc;
+  background: white;
+  z-index: 2;
 }
 
-.status-tag {
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: bold;
-  text-transform: uppercase;
-}
-.status-tag.active {
-  background-color: #d1fae5;
-  color: #065f46;
-}
-.status-tag.pending {
-  background-color: #fee2e2;
-  color: #991b1b;
+.red-triangle {
+  width: 0;
+  height: 0;
+  border-left: 20px solid transparent;
+  border-right: 20px solid transparent;
+  border-top: 30px solid red;
+  margin-top: -10px; /* Para que quede debajo del círculo */
+  z-index: 1;
 }
 
 .info-section {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
 }
 
 .info-row {
   font-size: 1.1rem;
-  border-bottom: 1px dashed #ccc; /* Línea punteada como cuaderno */
-  padding-bottom: 5px;
-}
-
-.btn-logout-link {
-  margin-top: 10px;
-  background: none;
-  border: none;
-  color: #dc3545;
-  text-decoration: underline;
-  cursor: pointer;
-  align-self: flex-start;
-  padding: 0;
-}
-
-/* --- Sección Historial (Abajo) --- */
-.history-section {
-  margin-top: 40px;
-}
-
-.history-title {
-  background-color: #0066cc;
-  color: white;
-  display: inline-block;
-  padding: 8px 20px;
-  border-radius: 5px 5px 0 0; /* Pestaña */
-  margin-bottom: 0;
-  font-size: 1.2rem;
-}
-
-.events-list {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.history-card {
-  background: white;
-  border: 2px solid #0066cc; /* Borde azul como el dibujo */
-  border-radius: 8px;
-  padding: 20px;
+  font-weight: 500;
+  border-bottom: 2px solid #000; /* Línea negra abajo de cada dato */
+  padding-bottom: 2px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
 }
 
-.history-info h4 {
-  margin: 0 0 10px 0;
-  font-size: 1.3rem;
+.history-button-container {
+  margin-top: 10px;
+  text-align: right;
 }
 
-.history-info p {
-  margin: 5px 0;
-  color: #555;
-}
-
-.btn-download {
-  background-color: white;
-  color: #0066cc;
-  border: 2px solid #0066cc;
-  padding: 10px 20px;
-  border-radius: 30px; /* Borde muy redondeado como el dibujo */
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-download:hover {
-  background-color: #0066cc;
+.history-label {
+  background: #3b82f6;
   color: white;
-}
-
-.no-events {
-  text-align: center;
-  color: #888;
-  font-style: italic;
-  margin-top: 20px;
-}
-
-/* Estilos específicos para Coordinador */
-.role-coord {
-  color: #b45309; /* Ámbar oscuro */
+  padding: 5px 10px;
+  border: 2px solid #0066cc;
   font-weight: bold;
-}
-
-.coord-card {
-  border-color: #ffc107 !important; /* Borde amarillo para coordinadores */
-}
-
-.status-badge-small {
-  padding: 6px 12px;
-  border-radius: 15px;
   font-size: 0.9rem;
+  display: inline-block;
+}
+
+/* --- TARJETAS DE EVENTOS --- */
+.history-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.event-history-card {
+  border: 3px solid; /* El color se define abajo */
+  padding: 15px;
+  background: white;
+  border-radius: 4px;
+}
+
+.border-green {
+  border-color: #2ea043;
+} /* Verde */
+.border-blue {
+  border-color: #0066cc;
+} /* Azul */
+
+.event-data p {
+  margin: 5px 0;
+  font-size: 1.2rem;
+  font-weight: 600; /* Letra gruesa como marcador */
+  border-bottom: 1px solid #ccc; /* Línea sutil */
+  width: fit-content;
+}
+
+.event-actions {
+  margin-top: 15px;
+}
+
+.btn-download-cert {
+  border: 2px solid #0066cc;
+  background: white;
+  color: #0066cc;
+  padding: 8px 20px;
+  border-radius: 25px; /* Forma ovalada */
   font-weight: bold;
-  text-transform: capitalize;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 100%;
+  text-align: center;
+  transition: background 0.2s;
 }
 
-.status-badge-small.approved {
-  background-color: #d1fae5;
-  color: #065f46;
-  border: 1px solid #a7f3d0;
+.btn-download-cert:hover {
+  background: #f0f8ff;
 }
 
-.status-badge-small.rejected {
-  background-color: #fee2e2;
-  color: #991b1b;
-  border: 1px solid #fecaca;
+.loading-msg,
+.error-msg {
+  text-align: center;
+  margin-top: 50px;
+  font-size: 1.5rem;
 }
