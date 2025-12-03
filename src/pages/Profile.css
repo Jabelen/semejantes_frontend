@@ -1,102 +1,173 @@
-/* Fondo general de la página */
-.profile-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 40px 20px;
-  background-color: #f0f4f8; /* Color de fondo suave */
-  min-height: 100vh;
+.profile-wrapper {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 0 20px;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Tarjeta principal */
-.profile-card {
-  background-color: #ffffff;
-  padding: 40px;
-  border-radius: 16px; /* Bordes más redondeados */
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); /* Sombra elegante */
-  max-width: 500px;
-  width: 100%;
-  text-align: center;
-  border-top: 5px solid #3b82f6; /* Línea de color arriba */
+/* --- Tarjeta de Usuario (Arriba) --- */
+.user-info-card {
+  display: flex;
+  background: white;
+  border: 2px solid #333; /* Borde negro estilo dibujo */
+  border-radius: 8px;
+  padding: 30px;
+  gap: 40px;
+  align-items: center;
+  box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.1); /* Sombra sólida */
 }
 
-.profile-title {
-  color: #1f2937;
-  margin-bottom: 15px;
-  font-size: 2rem;
-  font-weight: 700;
+.avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
 
-/* Etiquetas de estado (Activo / Pendiente) */
-.status-badge {
-  display: inline-block;
-  padding: 6px 16px;
-  border-radius: 50px;
-  font-size: 0.85rem;
-  font-weight: 600;
+.avatar-circle {
+  width: 100px;
+  height: 100px;
+  background-color: #0066cc;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.5rem;
+  font-weight: bold;
+  border: 3px solid #333;
+}
+
+.status-tag {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+}
+.status-tag.active {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+.status-tag.pending {
+  background-color: #fee2e2;
+  color: #991b1b;
 }
 
-.status-active {
+.info-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.info-row {
+  font-size: 1.1rem;
+  border-bottom: 1px dashed #ccc; /* Línea punteada como cuaderno */
+  padding-bottom: 5px;
+}
+
+.btn-logout-link {
+  margin-top: 10px;
+  background: none;
+  border: none;
+  color: #dc3545;
+  text-decoration: underline;
+  cursor: pointer;
+  align-self: flex-start;
+  padding: 0;
+}
+
+/* --- Sección Historial (Abajo) --- */
+.history-section {
+  margin-top: 40px;
+}
+
+.history-title {
+  background-color: #0066cc;
+  color: white;
+  display: inline-block;
+  padding: 8px 20px;
+  border-radius: 5px 5px 0 0; /* Pestaña */
+  margin-bottom: 0;
+  font-size: 1.2rem;
+}
+
+.events-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.history-card {
+  background: white;
+  border: 2px solid #0066cc; /* Borde azul como el dibujo */
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.history-info h4 {
+  margin: 0 0 10px 0;
+  font-size: 1.3rem;
+}
+
+.history-info p {
+  margin: 5px 0;
+  color: #555;
+}
+
+.btn-download {
+  background-color: white;
+  color: #0066cc;
+  border: 2px solid #0066cc;
+  padding: 10px 20px;
+  border-radius: 30px; /* Borde muy redondeado como el dibujo */
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-download:hover {
+  background-color: #0066cc;
+  color: white;
+}
+
+.no-events {
+  text-align: center;
+  color: #888;
+  font-style: italic;
+  margin-top: 20px;
+}
+
+/* Estilos específicos para Coordinador */
+.role-coord {
+  color: #b45309; /* Ámbar oscuro */
+  font-weight: bold;
+}
+
+.coord-card {
+  border-color: #ffc107 !important; /* Borde amarillo para coordinadores */
+}
+
+.status-badge-small {
+  padding: 6px 12px;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+.status-badge-small.approved {
   background-color: #d1fae5;
   color: #065f46;
   border: 1px solid #a7f3d0;
 }
 
-.status-pending {
+.status-badge-small.rejected {
   background-color: #fee2e2;
   color: #991b1b;
   border: 1px solid #fecaca;
-}
-
-/* Sección de detalles */
-.profile-details {
-  text-align: left;
-  margin-top: 30px;
-  color: #4b5563;
-}
-
-.detail-row {
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid #e5e7eb;
-  padding: 12px 0;
-}
-
-.detail-row:last-child {
-  border-bottom: none;
-}
-
-.detail-label {
-  font-weight: 600;
-  color: #374151;
-}
-
-.detail-value {
-  color: #6b7280;
-}
-
-/* Botón de Cerrar Sesión */
-.logout-btn {
-  margin-top: 30px;
-  width: 100%;
-  padding: 12px;
-  background-color: #ef4444;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 1rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.1s;
-}
-
-.logout-btn:hover {
-  background-color: #dc2626;
-}
-
-.logout-btn:active {
-  transform: scale(0.98);
 }

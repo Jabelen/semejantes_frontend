@@ -1,49 +1,52 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router"; // Para redirigir al usuario
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import "./Login.css";
 import Header from "../components/Header";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate(); // Hook de navegación
-
-  // Obtenemos la URL de la API desde las variables de entorno (.env)
+  const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL;
+
+  // 1. PROTECCIÓN: Si ya está logueado, lo mandamos al Dashboard
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      // 'replace: true' evita que se guarde esta redirección en el historial
+      navigate("/base", { replace: true });
+    }
+  }, [navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      // 1. Hacemos la petición al Backend
       const response = await fetch(`${API_URL}/api/auth/sign-in`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
       const data = await response.json();
 
-      // 2. Verificamos si hubo error
       if (!response.ok) {
-        // Si el backend dice "fail", mostramos el mensaje (ej: "Tu cuenta aún no ha sido aprobada")
         alert(data.message || "Error al iniciar sesión");
         return;
       }
 
-      // 3. ÉXITO: Guardamos el token y datos del usuario
-      // Esto es clave para que las siguientes peticiones funcionen
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      // 4. Redirigir al usuario a la zona privada (ej: /base o /home)
       alert("¡Bienvenido!");
-      navigate("/base");
+
+      // 2. TRUCO CLAVE: Usamos { replace: true }
+      // Esto borra el "Login" del historial y pone "Base" en su lugar.
+      // Así, si el usuario da "Atrás", no volverá al formulario de login.
+      navigate("/base", { replace: true });
     } catch (error) {
       console.error("Error de conexión:", error);
-      alert("No se pudo conectar con el servidor. Revisa tu conexión.");
+      alert("No se pudo conectar con el servidor.");
     }
   };
 
