@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
-import { jsPDF } from "jspdf";
+import { jsPDF } from "jspdf"; // Librería para el PDF
 import "./Profile.css";
 
 export default function Profile() {
   const [userData, setUserData] = useState(null);
-  const [myActivity, setMyActivity] = useState([]); // Eventos (Vol) o Solicitudes (Coord)
+  const [myEvents, setMyEvents] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
@@ -32,30 +32,19 @@ export default function Profile() {
           setUserData(userJson.data);
         }
 
-        // 2. Cargar Historial según el Rol
+        // 2. Obtener Historial de Eventos (Solo si es voluntario)
         if (storedUser.role === "Volunteer") {
-          // LOGICA VOLUNTARIO: Sus eventos
-          const eventRes = await fetch(`${API_URL}/api/events`);
+          const eventRes = await fetch(`${API_URL}/api/events`); // Traemos todos
           const eventJson = await eventRes.json();
+
           if (eventJson.status === "success") {
-            const participated = eventJson.data.filter(
-              (ev) =>
-                ev.participantes && ev.participantes.includes(storedUser.id)
+            // Filtramos: Eventos donde YO soy participante
+            const participatedEvents = eventJson.data.filter(
+              (event) =>
+                event.participantes &&
+                event.participantes.includes(storedUser.id)
             );
-            setMyActivity(participated);
-          }
-        } else if (storedUser.role === "Coordinator") {
-          // LOGICA COORDINADOR: Solicitudes que resolvió
-          const reqRes = await fetch(`${API_URL}/api/requests`, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          const reqJson = await reqRes.json();
-          if (reqJson.status === "success") {
-            // Filtramos las que tengan 'resolvedBy' igual a mi ID
-            const resolvedByMe = reqJson.data.filter(
-              (req) => req.resolvedBy === storedUser.id
-            );
-            setMyActivity(resolvedByMe);
+            setMyEvents(participatedEvents);
           }
         }
       } catch (error) {
@@ -68,7 +57,7 @@ export default function Profile() {
     fetchProfileData();
   }, [navigate, API_URL]);
 
-  // Función PDF (Solo para Voluntarios)
+  // --- FUNCIÓN PARA DESCARGAR CERTIFICADO ---
   const handleDownloadCertificate = async (eventId) => {
     const token = localStorage.getItem("token");
     try {
@@ -76,34 +65,77 @@ export default function Profile() {
         headers: { Authorization: `Bearer ${token}` },
       });
       const json = await res.json();
+
       if (json.status === "success") {
+        // Crear PDF
         const doc = new jsPDF({ orientation: "landscape" });
         const data = json.data;
-        doc.setDrawColor(0, 102, 204);
+
+        // Diseño simple del diploma
+        doc.setDrawColor(0, 102, 204); // Azul
         doc.setLineWidth(5);
-        doc.rect(10, 10, 277, 190);
+        doc.rect(10, 10, 277, 190); // Marco
+
         doc.setFont("helvetica", "bold");
         doc.setFontSize(40);
         doc.setTextColor(0, 102, 204);
         doc.text("DIPLOMA DE HONOR", 148.5, 50, null, null, "center");
+
         doc.setFontSize(20);
         doc.setTextColor(0, 0, 0);
         doc.setFont("helvetica", "normal");
-        doc.text("Se otorga a:", 148.5, 80, null, null, "center");
-        doc.setFontSize(30);
-        doc.setFont("helvetica", "bold");
-        doc.text(userData.username, 148.5, 100, null, null, "center");
-        doc.setFontSize(16);
-        doc.setFont("helvetica", "normal");
         doc.text(
-          `Por participar en: "${data.eventTitle}"`,
+          "Se otorga el presente reconocimiento a:",
           148.5,
-          130,
+          80,
           null,
           null,
           "center"
         );
-        doc.text(`Fecha: ${data.date}`, 148.5, 150, null, null, "center");
+
+        doc.setFontSize(30);
+        doc.setFont("helvetica", "bold");
+        doc.text(userData.username, 148.5, 100, null, null, "center");
+
+        doc.setFontSize(16);
+        doc.setFont("helvetica", "normal");
+        doc.text(
+          `Por su valiosa participación en el evento:`,
+          148.5,
+          120,
+          null,
+          null,
+          "center"
+        );
+
+        doc.setFontSize(22);
+        doc.text(
+          `"${data.eventTitle || data.title}"`,
+          148.5,
+          135,
+          null,
+          null,
+          "center"
+        );
+
+        doc.setFontSize(14);
+        doc.text(
+          `Fecha: ${data.date} | Duración: ${data.hours} horas`,
+          148.5,
+          150,
+          null,
+          null,
+          "center"
+        );
+        doc.text(
+          `Lugar: ${data.place || "Sede Central"}`,
+          148.5,
+          160,
+          null,
+          null,
+          "center"
+        );
+
         doc.save(`certificado_${eventId}.pdf`);
       } else {
         alert("Error: " + json.message);
@@ -118,138 +150,88 @@ export default function Profile() {
     navigate("/login");
   };
 
-  if (loading) return <div className="loading">Cargando...</div>;
-  if (!userData) return <div>Error de carga</div>;
+  if (loading) return <div className="loading-msg">Cargando perfil...</div>;
+  if (!userData)
+    return <div className="error-msg">No se pudo cargar el usuario</div>;
 
   return (
     <div className="profile-wrapper">
       {/* --- TARJETA SUPERIOR (DATOS) --- */}
       <div className="user-info-card">
         <div className="avatar-section">
-          <div
-            className="avatar-circle"
-            style={{
-              backgroundColor:
-                userData.role === "Coordinator" ? "#ffc107" : "#0066cc",
-              color: userData.role === "Coordinator" ? "#333" : "white",
-            }}
-          >
-            {userData.username.substring(0, 2).toUpperCase()}
+          {/* Círculo de Avatar */}
+          <div className="avatar-circle">
+            <span>
+              Img
+              <br />
+              Cara
+            </span>
           </div>
-          <div className={`status-tag ${userData.status}`}>
-            {userData.status === "active" ? "Activo" : "Pendiente"}
-          </div>
+          {/* Triángulo decorativo rojo del dibujo */}
+          <div className="red-triangle"></div>
         </div>
 
         <div className="info-section">
           <div className="info-row">
-            <strong>Nombre:</strong> <span>{userData.username}</span>
+            <strong>Nombre:</strong> {userData.username}
           </div>
           <div className="info-row">
-            <strong>Email:</strong> <span>{userData.email}</span>
+            <strong>Rut:</strong> {userData.id} (ID Interno)
           </div>
           <div className="info-row">
-            <strong>Teléfono:</strong>{" "}
-            <span>{userData.phone || "No registrado"}</span>
+            <strong>Nro. cel:</strong> {userData.phone || "-"}
           </div>
-
-          {/* Diferencia visual en el rol */}
           <div className="info-row">
-            <strong>Rol:</strong>
-            <span
-              className={
-                userData.role === "Coordinator" ? "role-coord" : "role-vol"
-              }
-            >
-              {userData.role === "Coordinator" ? "Coordinador" : "Voluntario"}
-            </span>
+            <strong>Correo:</strong> {userData.email}
+          </div>
+          <div className="info-row">
+            <strong>Rol:</strong>{" "}
+            {userData.role === "Volunteer" ? "Voluntario" : "Coordinador"}
           </div>
 
-          {userData.role === "Coordinator" && (
-            <div className="info-row">
-              <strong>Cargo:</strong> <span>{userData.position}</span>
-            </div>
-          )}
-
-          <button onClick={handleLogout} className="btn-logout-link">
-            Cerrar Sesión
-          </button>
+          <div className="history-button-container">
+            <span className="history-label">Historial de eventos ^</span>
+          </div>
         </div>
       </div>
 
-      {/* --- SECCIÓN INFERIOR (HISTORIAL) --- */}
-      <div className="history-section">
-        {/* Título dinámico según rol */}
-        <h3
-          className="history-title"
-          style={{
-            backgroundColor:
-              userData.role === "Coordinator" ? "#ffc107" : "#0066cc",
-            color: userData.role === "Coordinator" ? "#333" : "white",
-          }}
-        >
-          {userData.role === "Volunteer"
-            ? "Historial de Eventos"
-            : "Historial de Gestión"}
-        </h3>
-
-        {myActivity.length === 0 ? (
-          <p className="no-events">
-            {userData.role === "Volunteer"
-              ? "Aún no has participado en eventos."
-              : "Aún no has resuelto solicitudes."}
-          </p>
-        ) : (
-          <div className="events-list">
-            {/* Renderizado condicional de la lista */}
-            {userData.role === "Volunteer"
-              ? // VISTA VOLUNTARIO (Eventos + Certificado)
-                myActivity.map((event) => (
-                  <div key={event._id} className="history-card">
-                    <div className="history-info">
-                      <h4>{event.title || "Evento sin título"}</h4>
-                      <p>
-                        <strong>Fecha:</strong> {event.date}
-                      </p>
-                      <p>
-                        <strong>Lugar:</strong> {event.place}
-                      </p>
-                    </div>
-                    <div className="history-action">
-                      <button
-                        className="btn-download"
-                        onClick={() => handleDownloadCertificate(event._id)}
-                      >
-                        Descargar certificado
-                      </button>
-                    </div>
-                  </div>
-                ))
-              : // VISTA COORDINADOR (Solicitudes Resueltas)
-                myActivity.map((req) => (
-                  <div key={req._id} className="history-card coord-card">
-                    <div className="history-info">
-                      <h4>Solicitud: {req.title}</h4>
-                      <p>
-                        <strong>Beneficiario:</strong> {req.beneficiaryName}
-                      </p>
-                      <p>
-                        <strong>Resolución:</strong>{" "}
-                        {new Date(req.updatedAt).toLocaleDateString()}
-                      </p>
-                    </div>
-                    <div className="history-action">
-                      <span className={`status-badge-small ${req.status}`}>
-                        {req.status === "approved"
-                          ? "Aprobada ✅"
-                          : "Rechazada ❌"}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-          </div>
-        )}
-      </div>
+      {/* --- SECCIÓN INFERIOR (HISTORIAL DE TARJETAS) --- */}
+      {userData.role === "Volunteer" && (
+        <div className="history-section">
+          {myEvents.length === 0 ? (
+            <p className="no-events">No hay eventos registrados aún.</p>
+          ) : (
+            myEvents.map((event, index) => (
+              <div
+                key={event._id}
+                className={`event-history-card ${
+                  index % 2 === 0 ? "border-green" : "border-blue"
+                }`}
+              >
+                <div className="event-data">
+                  <p>
+                    <strong>Evento:</strong> {event.title || "Sin título"}
+                  </p>
+                  <p>
+                    <strong>Rol desempeñado:</strong> Voluntario
+                  </p>
+                  <p>
+                    <strong>Fecha:</strong> {event.date}
+                  </p>
+                </div>
+                <div className="event-actions">
+                  <button
+                    className="btn-download-cert"
+                    onClick={() => handleDownloadCertificate(event._id)}
+                  >
+                    Descargar certificado
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      )}
     </div>
   );
 }
