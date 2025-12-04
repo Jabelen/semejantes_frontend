@@ -1,40 +1,52 @@
-import { useState } from 'react'
-import Header from '../components/Header.jsx'
+import React from 'react';
+import Header from '../components/Header.jsx';
 import FloatingButton from "../components/FloatingButton";
+import './Contact.css';
 
 export default function Contact() {
     return(
-        <>
-            <div><Header/></div>
-            <div>
-                <h1>Contáctanos</h1> 
-                <h2>Te escuchámos</h2>
-                <h2>Queremos conocerte</h2>
-                <h3>Nos encantaría conocer tú experiencia, para así poder trabajar de mejor forma y servir a la sociedad 
-                    en general, en una constante búsqueda de mayor equidad y reconocimientos.</h3>
-                <h3>Además, para nosotros es muy importante generar nuevos lazos, que nos lleven juntos a mejores resultados.</h3>
-                <div>
-                    <h2>Whatsapp</h2>
-                    <h3>Lunes a Viernes</h3>
-                    <h3>09:00 a 17:00</h3>
-                </div>
-                <div>
-                    <h2>Correo</h2>
-                    <h3>contacto@semejantes.cl </h3>
-                </div>
-                <div>
-                    <h2>Instagram</h2>
-                    <h3>@semejantes.chile</h3>
-                </div>
-                <div>
-                    <h2>Facebook</h2>
-                    <h3>Semejantes</h3>
-                </div>
+        <div className="contact-page">
+            <Header/>
+            
+            {/* Hero Section con fondo azul */}
+            <div className="contact-hero">
+                <h1>Contáctanos</h1>
+                <p>Estamos a un clic de distancia</p>
             </div>
-            <div>
-                <FloatingButton/>
-            </div>
-        </>
+            
+            <div className="contact-content">
+                <div className="contact-grid">
+                    {/* 1. Correo */}
+                    <a href="mailto:contacto@semejantes.cl" className="contact-card">
+                        <span className="card-icon">📧</span>
+                        <span className="card-title">Correo</span>
+                        <span className="card-action">Envíanos un email</span>
+                    </a>
 
+                    {/* 2. WhatsApp */}
+                    <a href="https://wa.me/56912345678" target="_blank" rel="noreferrer" className="contact-card">
+                        <span className="card-icon">💬</span>
+                        <span className="card-title">WhatsApp</span>
+                        <span className="card-action">Chatea con nosotros</span>
+                    </a>
+
+                    {/* 3. Instagram */}
+                    <a href="https://www.instagram.com/semejantes.chile/" target="_blank" rel="noreferrer" className="contact-card">
+                        <span className="card-icon">📷</span>
+                        <span className="card-title">Instagram</span>
+                        <span className="card-action">Mira nuestras fotos</span>
+                    </a>
+
+                    {/* 4. Facebook */}
+                    <a href="https://www.facebook.com/semejantes.alianza" target="_blank" rel="noreferrer" className="contact-card">
+                        <span className="card-icon">👥</span>
+                        <span className="card-title">Facebook</span>
+                        <span className="card-action">Síguenos</span>
+                    </a>
+                </div>
+            </div>
+
+            <FloatingButton/>
+        </div>
     );
 }

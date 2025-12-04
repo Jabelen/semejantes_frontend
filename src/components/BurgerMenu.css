@@ -1,6 +1,6 @@
 /* src/components/BurgerMenu.css */
 
-/* --- BOTÓN DE APERTURA (Hamburguesa) --- */
+/* --- BOTÓN HAMBURGUESA (El icono de las 3 rayitas) --- */
 .bm-burger-button {
   position: fixed;
   width: 32px;
@@ -12,37 +12,33 @@
 }
 
 .bm-burger-button:hover {
-  transform: scale(1.1); /* Efecto sutil al pasar el mouse */
+  transform: scale(1.1);
 }
 
-/* Barras del icono: Más finas y elegantes */
 .bm-burger-bars {
-  background: #ffffff !important;
-  border-radius: 10px; /* Bordes totalmente redondeados */
-  height: 12% !important; /* Más delgadas para un look moderno */
+  background: #ffffff !important; /* Blanco forzado */
+  border-radius: 10px;
+  height: 3px !important; /* Grosor fijo */
   opacity: 0.9;
-  transition: all 0.3s ease;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2); /* Sombra suave para que resalte */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
 .bm-burger-bars-hover {
-  background: #a3d5ff !important; /* Azul muy claro al interactuar */
+  background: #a3d5ff !important;
   opacity: 1;
 }
 
-/* --- BOTÓN DE CIERRE (Cruz) --- */
+/* Cruz de cerrar */
 .bm-cross-button {
-  height: 32px;
-  width: 32px;
+  height: 30px;
+  width: 30px;
   top: 25px !important;
   right: 25px !important;
 }
 
 .bm-cross {
   background: #ffffff !important;
-  height: 3px !important; /* Más fina */
-  border-radius: 5px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.2);
+  height: 3px !important;
 }
 
 /* --- CONTENEDOR DEL MENÚ --- */
@@ -51,68 +47,90 @@
   height: 100%;
   top: 0;
   z-index: 9998 !important;
-  /* Sombra lateral suave para que no se vea plano */
-  box-shadow: 5px 0 20px rgba(0, 0, 0, 0.3); 
 }
 
-/* EL PANEL DEL MENÚ (Fondo) */
 .bm-menu {
-  /* Degradado sutil en azul profundo para dar profundidad */
-  background: linear-gradient(160deg, #1a3c6d 0%, #132f56 100%);
-  padding: 4em 2em 0;
+  background: linear-gradient(160deg, #1a3c6d 0%, #132f56 100%) !important; /* Fondo azul profundo forzado */
+  padding: 4em 1.5em 0;
   font-size: 1.15em;
-  border-right: 1px solid rgba(255, 255, 255, 0.05); /* Borde casi invisible */
+  box-shadow: 5px 0 20px rgba(0, 0, 0, 0.3);
 }
 
-/* --- LISTA DE ELEMENTOS --- */
 .bm-item-list {
-  color: #f0f7ff;
   padding: 0.5em;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px; /* Espacio uniforme entre TODOS los botones */
 }
 
-/* Items individuales (Enlaces) */
+/* --- ESTILO UNIFICADO PARA TODOS LOS BOTONES --- */
+/* Usamos !important aquí para que NADA más pueda cambiarles el color o el comportamiento */
+
 .bm-item {
-  display: flex !important; /* Para alinear iconos si los hubiera */
+  display: flex !important;
   align-items: center;
-  text-decoration: none;
-  color: rgba(255, 255, 255, 0.85); /* Blanco ligeramente transparente (más suave) */
-  font-family: 'Segoe UI', sans-serif;
-  font-weight: 500;
-  font-size: 1.1rem;
-  padding: 10px 15px;
-  border-radius: 12px; /* Fondo redondeado al hacer hover */
-  transition: all 0.3s ease;
-  outline: none;
-  position: relative;
+  text-decoration: none !important;
+  
+  /* Color de letra y fuente UNIFICADOS */
+  color: rgba(255, 255, 255, 0.85) !important; 
+  font-family: 'Segoe UI', sans-serif !important;
+  font-weight: 500 !important;
+  font-size: 1.1rem !important;
+  
+  padding: 12px 15px !important; /* Relleno igual para todos */
+  border-radius: 12px !important;
+  transition: all 0.2s ease !important;
+  background-color: transparent !important; /* Fondo transparente por defecto */
+  border: none !important;
+  outline: none !important;
 }
 
-/* Efecto Hover: Fondo suave y texto brillante */
+/* --- EFECTO HOVER UNIFICADO --- */
+/* Al pasar el mouse, TODOS reaccionarán así */
 .bm-item:hover {
-  color: #ffffff;
-  background-color: rgba(255, 255, 255, 0.1); /* Fondo blanco semitransparente */
-  transform: translateX(5px);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  color: #ffffff !important; /* Blanco puro */
+  background-color: rgba(255, 255, 255, 0.15) !important; /* Fondo semitransparente "burbuja" */
+  transform: translateX(5px); /* Pequeño desplazamiento */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-/* Íconos dentro del menú (si usas emojis o svgs) */
+/* Iconos dentro de los botones */
 .bm-item span {
-  margin-right: 10px;
+  margin-right: 12px;
+  font-size: 1.2rem;
 }
 
-/* --- SECCIÓN DE BIENVENIDA (Dashboard) --- */
-/* Estilos específicos para cuando estás logueado */
+/* --- ESTILOS ESPECIALES (Solo para elementos específicos como Header o Logout) --- */
+
+/* Título "Hola, [Usuario]" */
 .menu-header {
-  font-family: 'Georgia', serif;
-  font-size: 1.6rem;
-  color: #a3d5ff; /* Azul cielo para el nombre */
-  margin-bottom: 30px;
-  padding-bottom: 20px;
+  font-family: 'Georgia', serif !important;
+  font-size: 1.5rem !important;
+  color: #a3d5ff !important;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
   text-align: center;
-  letter-spacing: 0.5px;
 }
 
-/* Bot
+/* Botón Cerrar Sesión (Diferente solo en color de borde/texto para destacar peligro, pero misma forma) */
+.menu-item.logout {
+  margin-top: 30px !important;
+  color: #ffb3b3 !important; /* Rojizo */
+  border: 1px solid rgba(255, 179, 179, 0.2) !important;
+  justify-content: center; /* Centrado */
+}
+
+.menu-item.logout:hover {
+  background-color: rgba(255, 77, 77, 0.15) !important;
+  color: #ffcccc !important;
+}
+
+/* Overlay (Fondo oscuro) */
+.bm-overlay {
+  background: rgba(26, 60, 109, 0.5) !important;
+  backdrop-filter: blur(4px);
+  top: 0;
+  left: 0;
+  z-index: 9000 !important;
+}

@@ -1,68 +1,30 @@
 /* src/pages/Base.css */
 
 :root {
-  --blue-deep: #1a3c6d;
   --blue-soft: #f0f7ff;
-  --text-dark: #333;
 }
 
-/* Contenedor principal de la aplicación */
 #outer-container {
   height: 100vh;
-  background-color: var(--blue-soft); /* Fondo unificado con el resto del sitio */
+  background-color: var(--blue-soft);
   font-family: 'Segoe UI', sans-serif;
-  overflow: hidden; /* Evita doble scroll */
+  overflow: hidden;
 }
 
-/* Contenedor del contenido que se desplaza al abrir el menú */
 #page-wrap {
   height: 100%;
-  overflow-y: auto; /* El scroll ocurre aquí dentro */
+  overflow-y: auto;
   transition: all 0.3s ease;
   background-color: var(--blue-soft);
 }
 
-/* Área de contenido del Dashboard */
 .dashboard-content {
   padding: 40px 20px;
   max-width: 1200px;
   margin: 0 auto;
-  min-height: 85vh; /* Asegura altura mínima visual */
+  min-height: 85vh;
 }
 
-/* --- Estilos Específicos dentro del Menú Lateral --- */
-/* (Estos complementan a BurgerMenu.css) */
-
-/* Header del menú ("Hola, [Nombre]") */
-.menu-header {
-  color: #ffffff;
-  font-family: 'Georgia', serif; /* Fuente sentimental para el saludo */
-  font-size: 1.8rem;
-  font-weight: bold;
-  margin-bottom: 30px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Línea separadora sutil */
-  text-align: center;
-  letter-spacing: 0.5px;
-}
-
-/* Ajustes finos para los items del menú en este contexto */
-.bm-item {
-  font-size: 1.1rem;
-  padding: 5px 0;
-  outline: none; /* Quita el borde de selección al hacer clic */
-}
-
-/* Botón de Cerrar Sesión (Logout) destacado */
-.menu-item.logout {
-  margin-top: 40px; /* Separación del resto de opciones */
-  color: #ffcccc; /* Un tono rojizo suave que se ve bien sobre el azul oscuro */
-  font-weight: 600;
-  border-top: 1px solid rgba(255, 255, 255, 0.1); /* Separador superior */
-  padding-top: 20px;
-  transition: color 0.3s ease;
-}
-
-.menu-item.logout:hover {
-  color: #ff6b6b; /* Rojo más vivo al pasar el mouse */
-}
+/* NOTA: Ya no hay estilos para .bm-item aquí. 
+   Todo el estilo del menú viene exclusivamente de BurgerMenu.css 
+   para asegurar consistencia total. */

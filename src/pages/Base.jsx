@@ -38,42 +38,45 @@ export default function Base() {
   return (
     <div id="outer-container">
       <Menu pageWrapId={"page-wrap"} outerContainerId={"outer-container"}>
-        <div className="menu-header">Hola, {user.username}</div>
+        <div className="menu-header">Menú {user.username}</div>
 
+        {/* Opciones Comunes: Estandarizadas con <span> para el icono */}
         <a className="menu-item" onClick={() => setView("home")}>
-          🏠 Inicio
+          <span>🏠</span> Inicio
         </a>
         <a className="menu-item" onClick={() => setView("profile")}>
-          👤 Mi Perfil
+          <span>👤</span> Mi Perfil
         </a>
         <a className="menu-item" onClick={() => setView("events")}>
-          📅 Eventos
+          <span>📅</span> Eventos
         </a>
 
+        {/* Opciones Coordinador */}
         {user.role === "Coordinator" && (
           <>
             <a className="menu-item" onClick={() => setView("users")}>
-              👥 Usuarios Pendientes
+              <span>👥</span> Usuarios Pendientes
             </a>
             <a className="menu-item" onClick={() => setView("donations")}>
-              🎁 Inventario
+              <span>🎁</span> Inventario
             </a>
             <a className="menu-item" onClick={() => setView("requests")}>
-              📝 Solicitudes
+              <span>📝</span> Solicitudes
             </a>
             <a className="menu-item" onClick={() => setView("reports")}>
-              📊 Reportes
+              <span>📊</span> Reportes
             </a>
           </>
         )}
 
+        {/* Opciones Voluntario */}
         {user.role === "Volunteer" && (
           <>
             <a className="menu-item" onClick={() => setView("requests")}>
-              🙏 Pedir Ayuda
+              <span>🙏</span> Pedir Ayuda
             </a>
             <a className="menu-item" onClick={() => setView("donations")}>
-              🎁 Ver Donaciones
+              <span>🎁</span> Ver Donaciones
             </a>
           </>
         )}
@@ -85,7 +88,7 @@ export default function Base() {
             navigate("/login");
           }}
         >
-          Cerrar Sesión
+          <span>🚪</span> Cerrar Sesión
         </a>
       </Menu>
 
