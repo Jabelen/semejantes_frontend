@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import { apiRequest } from "../../utils/api";
-import "./DashboardComponents.css"; // Crearemos este CSS al final
+import { formatChileDate } from "../../utils/dateHelper"; // <--- IMPORTAR
+import "./DashboardComponents.css";
 
 export default function EventsManager({ userRole }) {
   const [events, setEvents] = useState([]);
   const [showForm, setShowForm] = useState(false);
-
-  // Estado Formulario
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -35,22 +34,12 @@ export default function EventsManager({ userRole }) {
     e.preventDefault();
     const data = new FormData();
     Object.keys(formData).forEach((key) => data.append(key, formData[key]));
-    if (file) data.append("photos", file); // Nombre 'photos' igual al backend
+    if (file) data.append("photos", file);
 
     try {
-      await apiRequest("/api/events", "POST", data, true); // true = es archivo
+      await apiRequest("/api/events", "POST", data, true);
       alert("Evento creado!");
       setShowForm(false);
-      loadEvents();
-    } catch (err) {
-      alert("Error: " + err.message);
-    }
-  };
-
-  const handleJoin = async (id) => {
-    try {
-      await apiRequest(`/api/events/${id}/participate`, "PATCH");
-      alert("¡Inscrito exitosamente!");
       loadEvents();
     } catch (err) {
       alert(err.message);
@@ -58,10 +47,19 @@ export default function EventsManager({ userRole }) {
   };
 
   const handleDelete = async (id) => {
-    if (!confirm("¿Borrar evento?")) return;
+    if (!confirm("¿Borrar?")) return;
     try {
       await apiRequest(`/api/events/${id}`, "DELETE");
       loadEvents();
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  const handleJoin = async (id) => {
+    try {
+      await apiRequest(`/api/events/${id}/participate`, "PATCH");
+      alert("Inscrito!");
     } catch (err) {
       alert(err.message);
     }
@@ -110,7 +108,7 @@ export default function EventsManager({ userRole }) {
             />
             <input
               type="number"
-              placeholder="Duración (hrs)"
+              placeholder="Duración"
               onChange={(e) =>
                 setFormData({ ...formData, duration: e.target.value })
               }
@@ -120,12 +118,6 @@ export default function EventsManager({ userRole }) {
             placeholder="Lugar"
             onChange={(e) =>
               setFormData({ ...formData, place: e.target.value })
-            }
-          />
-          <input
-            placeholder="Requisitos"
-            onChange={(e) =>
-              setFormData({ ...formData, requirements: e.target.value })
             }
           />
           <input type="file" onChange={(e) => setFile(e.target.files[0])} />
@@ -143,8 +135,9 @@ export default function EventsManager({ userRole }) {
             )}
             <h3>{ev.title}</h3>
             <p>{ev.description}</p>
+            {/* FECHA CON FORMATO CHILENO */}
             <small>
-              📅 {ev.date} | 📍 {ev.place}
+              📅 {formatChileDate(ev.date)} | 📍 {ev.place}
             </small>
             <div className="card-actions">
               {userRole === "Volunteer" && (

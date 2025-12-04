@@ -9,9 +9,7 @@ export const apiRequest = async (
   const token = localStorage.getItem("token");
   const headers = { Authorization: `Bearer ${token}` };
 
-  if (!isFile && body) {
-    headers["Content-Type"] = "application/json";
-  }
+  if (!isFile && body) headers["Content-Type"] = "application/json";
 
   const config = {
     method,
@@ -19,13 +17,8 @@ export const apiRequest = async (
     body: isFile ? body : body ? JSON.stringify(body) : null,
   };
 
-  try {
-    const res = await fetch(`${API_URL}${endpoint}`, config);
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || "Error en la petición");
-    return data;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
+  const res = await fetch(`${API_URL}${endpoint}`, config);
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || "Error API");
+  return data;
 };

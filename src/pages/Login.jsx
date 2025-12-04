@@ -10,10 +10,10 @@ const Login = () => {
   const API_URL = import.meta.env.VITE_API_URL;
 
   // 1. PROTECCIÓN: Si ya está logueado, lo mandamos al Dashboard
+  // Esto impide que vea el formulario si presiona "Atrás" después de entrar.
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      // 'replace: true' evita que se guarde esta redirección en el historial
       navigate("/base", { replace: true });
     }
   }, [navigate]);
@@ -24,7 +24,9 @@ const Login = () => {
     try {
       const response = await fetch(`${API_URL}/api/auth/sign-in`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({ email, password }),
       });
 
@@ -35,18 +37,19 @@ const Login = () => {
         return;
       }
 
+      // Guardar sesión
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
       alert("¡Bienvenido!");
 
-      // 2. TRUCO CLAVE: Usamos { replace: true }
-      // Esto borra el "Login" del historial y pone "Base" en su lugar.
-      // Así, si el usuario da "Atrás", no volverá al formulario de login.
+      // 2. REDIRECCIÓN CON REPLACE:
+      // 'replace: true' sustituye la entrada actual (Login) en el historial por la nueva (Base).
+      // Así, el botón "Atrás" del navegador saltará el Login y te llevará a la página anterior a esa (ej: Home o Google).
       navigate("/base", { replace: true });
     } catch (error) {
       console.error("Error de conexión:", error);
-      alert("No se pudo conectar con el servidor.");
+      alert("No se pudo conectar con el servidor. Revisa tu conexión.");
     }
   };
 

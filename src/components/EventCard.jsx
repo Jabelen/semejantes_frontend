@@ -1,4 +1,5 @@
 import "./EventCard.css";
+import { formatChileDate } from "../utils/dateHelper";
 
 export default function EventCard({
   event,
@@ -7,11 +8,8 @@ export default function EventCard({
   onDelete,
   userId,
 }) {
-  // Verificar si el usuario ya está inscrito (si su ID está en la lista de participantes)
   const isParticipating =
     event.participantes && event.participantes.includes(userId);
-
-  // Imagen por defecto si el evento no tiene fotos
   const imageUrl =
     event.images && event.images.length > 0
       ? event.images[0]
@@ -25,8 +23,9 @@ export default function EventCard({
           <p className="event-desc">{event.description}</p>
 
           <div className="event-details">
+            {/* USAR AQUÍ EL FORMATO */}
             <p>
-              <strong>📅 Fecha:</strong> {event.date}
+              <strong>📅 Fecha:</strong> {formatChileDate(event.date)}
             </p>
             <p>
               <strong>⏰ Hora:</strong> {event.time}
@@ -44,7 +43,6 @@ export default function EventCard({
         </div>
 
         <div className="card-actions">
-          {/* Botón para VOLUNTARIOS */}
           {userRole === "Volunteer" && (
             <button
               className={`btn-inscribir ${isParticipating ? "disabled" : ""}`}
@@ -55,7 +53,6 @@ export default function EventCard({
             </button>
           )}
 
-          {/* Botón para COORDINADORES */}
           {userRole === "Coordinator" && (
             <button className="btn-delete" onClick={() => onDelete(event._id)}>
               Eliminar Evento 🗑️

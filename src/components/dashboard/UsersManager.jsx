@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { apiRequest } from "../../utils/api";
+import { apiRequest } from "../../utils/api"; // Asegúrate de tener src/utils/api.js
 import "./DashboardComponents.css";
 
 export default function UsersManager() {
@@ -12,19 +12,17 @@ export default function UsersManager() {
   const loadUsers = async () => {
     try {
       const res = await apiRequest("/api/users");
-      // Filtramos solo los pendientes
-      const pending = res.data.filter((u) => u.status === "pending");
-      setUsers(pending);
+      // Filtrar solo pendientes
+      setUsers(res.data.filter((u) => u.status === "pending"));
     } catch (err) {
       console.error(err);
     }
   };
 
   const handleStatus = async (id, status) => {
-    if (!confirm(`¿Estás seguro de cambiar el estado a ${status}?`)) return;
     try {
       await apiRequest(`/api/users/${id}/status`, "PATCH", { status });
-      alert(`Usuario ${status === "active" ? "Aprobado" : "Rechazado"}`);
+      alert("Usuario actualizado");
       loadUsers();
     } catch (err) {
       alert(err.message);
@@ -33,58 +31,30 @@ export default function UsersManager() {
 
   return (
     <div className="module-container">
-      <h2>Solicitudes de Registro (Pendientes)</h2>
-      {users.length === 0 ? (
-        <p>No hay usuarios pendientes de aprobación.</p>
-      ) : (
-        <div className="cards-grid">
-          {users.map((user) => (
-            <div
-              key={user.id}
-              className="dash-card"
-              style={{ borderLeft: "5px solid #ffc107" }}
+      <h2>Usuarios Pendientes</h2>
+      {users.length === 0 && <p>No hay solicitudes pendientes.</p>}
+      <div className="cards-grid">
+        {users.map((u) => (
+          <div key={u.id} className="dash-card">
+            <h3>{u.username}</h3>
+            <p>
+              {u.email} - {u.role}
+            </p>
+            <button
+              onClick={() => handleStatus(u.id, "active")}
+              className="btn-success"
             >
-              <h3>{user.username}</h3>
-              <p>
-                <strong>Email:</strong> {user.email}
-              </p>
-              <p>
-                <strong>Rol:</strong> {user.role}
-              </p>
-              {user.role === "Volunteer" && (
-                <>
-                  <p>
-                    <strong>Disponibilidad:</strong> {user.availability}
-                  </p>
-                  <p>
-                    <strong>Especialidad:</strong> {user.speciality}
-                  </p>
-                </>
-              )}
-              {user.role === "Coordinator" && (
-                <p>
-                  <strong>Cargo:</strong> {user.position}
-                </p>
-              )}
-
-              <div className="card-actions" style={{ marginTop: "15px" }}>
-                <button
-                  onClick={() => handleStatus(user.id, "active")}
-                  className="btn-success"
-                >
-                  Aprobar ✅
-                </button>
-                <button
-                  onClick={() => handleStatus(user.id, "rejected")}
-                  className="btn-danger"
-                >
-                  Rechazar ❌
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+              Aprobar
+            </button>
+            <button
+              onClick={() => handleStatus(u.id, "rejected")}
+              className="btn-danger"
+            >
+              Rechazar
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
