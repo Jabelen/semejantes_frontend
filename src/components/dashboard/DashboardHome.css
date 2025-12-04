@@ -42,7 +42,6 @@
   margin: 0;
 }
 
-/* --- SECCIÓN PERFIL DESTACADO --- */
 .profile-shortcut-container {
   display: flex;
   justify-content: center;
@@ -51,11 +50,11 @@
 
 .profile-card-wide {
   width: 100%;
-  max-width: 500px; /* Más ancho que los normales */
+  max-width: 500px;
   height: auto;
-  flex-direction: row !important; /* Icono al lado del texto */
+  flex-direction: row !important;
   gap: 20px;
-  background-color: #f0f8ff !important; /* Fondo azulito suave */
+  background-color: #f0f8ff !important;
   border-color: #0066cc !important;
 }
 

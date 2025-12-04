@@ -5,47 +5,28 @@ export default function EventCard({
   event,
   userRole,
   onJoin,
+  onLeave,
   onDelete,
+  onEdit,
   userId,
 }) {
   const isParticipating =
     event.participantes && event.participantes.includes(userId);
 
-  // Lógica para verificar si el evento pasó
   const isEventPassed = (dateString, timeString) => {
     if (!dateString) return false;
     const now = new Date();
 
-    // 1. Intentar crear la fecha base
-    let eventDate = new Date(dateString);
+    const cleanDate = String(dateString).substring(0, 10);
+    const [year, month, day] = cleanDate.split("-").map(Number);
+    const eventDate = new Date(year, month - 1, day);
 
-    // Validación de seguridad: si la fecha es inválida, no bloqueamos (asumimos futuro)
-    if (isNaN(eventDate.getTime())) {
-      console.warn("Fecha inválida recibida:", dateString);
-      return false;
-    }
-
-    // 2. Ajuste de Zona Horaria:
-    // Extraemos los componentes UTC (que es como Mongo guarda) y los usamos
-    // para crear una fecha LOCAL. Esto corrige el desfase de -4 horas.
-    eventDate = new Date(
-      eventDate.getUTCFullYear(),
-      eventDate.getUTCMonth(),
-      eventDate.getUTCDate()
-    );
-
-    // 3. Configurar hora de término
     if (timeString && timeString.includes(":")) {
       const [hours, minutes] = timeString.split(":").map(Number);
       eventDate.setHours(hours, minutes, 0, 0);
     } else {
-      // Si no hay hora, se considera activo hasta el final del día
-      eventDate.setHours(23, 59, 59, 999);
+      eventDate.setHours(23, 59, 59);
     }
-
-    // Debug (Puedes borrarlo si te molesta)
-    // console.log(`Evento: ${event.title} | Cierra: ${eventDate.toLocaleString()} | Ahora: ${now.toLocaleString()} | Pasó?: ${now > eventDate}`);
-
     return now > eventDate;
   };
 
@@ -83,32 +64,46 @@ export default function EventCard({
         </div>
 
         <div className="card-actions">
+          {/* VOLUNTARIO */}
           {userRole === "Volunteer" && (
-            <button
-              className={`btn-inscribir ${
-                hasPassed
-                  ? "disabled-passed"
-                  : isParticipating
-                  ? "disabled-joined"
-                  : ""
-              }`}
-              onClick={() =>
-                !isParticipating && !hasPassed && onJoin(event._id)
-              }
-              disabled={isParticipating || hasPassed}
-            >
-              {hasPassed
-                ? "Finalizado 🔒"
-                : isParticipating
-                ? "Ya estás inscrito ✅"
-                : "Inscríbete"}
-            </button>
+            <>
+              {hasPassed ? (
+                <button className="btn-inscribir disabled-passed" disabled>
+                  Evento Finalizado 🔒
+                </button>
+              ) : isParticipating ? (
+                <button
+                  className="btn-leave"
+                  onClick={() => onLeave(event._id)}
+                >
+                  Cancelar Inscripción ❌
+                </button>
+              ) : (
+                <button
+                  className="btn-inscribir"
+                  onClick={() => onJoin(event._id)}
+                >
+                  Inscríbete
+                </button>
+              )}
+            </>
           )}
 
+          {/* COORDINADOR: BOTONES DE GESTIÓN */}
           {userRole === "Coordinator" && (
-            <button className="btn-delete" onClick={() => onDelete(event._id)}>
-              Eliminar Evento 🗑️
-            </button>
+            <div className="coord-buttons">
+              {/* Botón Nuevo: EDITAR */}
+              <button className="btn-edit" onClick={() => onEdit(event)}>
+                Editar ✏️
+              </button>
+
+              <button
+                className="btn-delete"
+                onClick={() => onDelete(event._id)}
+              >
+                Eliminar 🗑️
+              </button>
+            </div>
           )}
         </div>
       </div>

@@ -178,3 +178,48 @@
   border-radius: 8px;
   z-index: 10;
 }
+
+.btn-leave {
+  padding: 10px 20px;
+  background-color: white;
+  color: #dc3545;
+  font-weight: bold;
+  border: 2px solid #dc3545;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: all 0.2s;
+}
+
+.btn-leave:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+.coord-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.btn-edit {
+  flex: 1;
+  padding: 8px 16px;
+  background-color: #ffc107; /* Amarillo */
+  color: #333;
+  border: 2px solid #e0a800;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-edit:hover {
+  background-color: #e0a800;
+}
+
+/* Aseguramos que el botón delete también se ajuste */
+.btn-delete {
+  flex: 1;
+  margin-top: 0 !important; /* Quitar margen superior si está en flex */
+}

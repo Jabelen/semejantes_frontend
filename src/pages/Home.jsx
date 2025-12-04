@@ -6,7 +6,7 @@ import "../components/SharedSliderStyles.css";
 import "./Home.css";
 
 // Importamos la imagen para el fondo
-import heroBg from "../assets/foto2.jpeg"; 
+import heroBg from "../assets/foto2.jpeg";
 
 const DEFAULT_IMAGE =
   "https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260";
@@ -26,8 +26,9 @@ function Home() {
 
       if (data.status === "success" && data.data.length > 0) {
         const sortedEvents = data.data.sort(
-          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+          (a, b) => new Date(b.date) - new Date(a.date)
         );
+
         const eventsWithImages = sortedEvents.filter(
           (ev) => ev.images && ev.images.length > 0
         );
@@ -37,7 +38,7 @@ function Home() {
           setSlides(
             last4Events.map((ev) => ({
               imgURL: ev.images[0],
-              imgAlt: ev.title, 
+              imgAlt: ev.title,
             }))
           );
         } else {
@@ -58,14 +59,21 @@ function Home() {
 
       {/* SECCIÓN HERO: Imagen Grande y Texto Emotivo */}
       <div className="home-hero">
-        <img src={heroBg} alt="Comunidad Semejantes" className="hero-bg-image" />
+        <img
+          src={heroBg}
+          alt="Comunidad Semejantes"
+          className="hero-bg-image"
+        />
         <div className="hero-overlay"></div>
-        
+
         <div className="hero-content">
           <span className="hero-subtitle">ONG Semejantes</span>
-          <h1 className="hero-title">Integrando corazones, transformando vidas</h1>
+          <h1 className="hero-title">
+            Integrando corazones, transformando vidas
+          </h1>
           <p className="hero-quote">
-            "Porque cada persona es valiosa, amada y tiene un propósito especial en Dios."
+            "Porque cada persona es valiosa, amada y tiene un propósito especial
+            en Dios."
           </p>
         </div>
       </div>
@@ -73,7 +81,7 @@ function Home() {
       {/* SECCIÓN SLIDER: Con marco de foto */}
       <div className="slider-section">
         <h2 className="album-title">Nuestros Momentos Recientes</h2>
-        
+
         <div className="album-frame">
           <div className="slider-wrapper-centered">
             {slides.length > 0 ? (
