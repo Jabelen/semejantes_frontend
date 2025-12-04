@@ -1,66 +1,118 @@
-/* Position and sizing of burger button */
+/* src/components/BurgerMenu.css */
+
+/* --- BOTÓN DE APERTURA (Hamburguesa) --- */
 .bm-burger-button {
   position: fixed;
-  width: 36px;
-  height: 30px;
-  left: 36px;
-  top: 36px;
-}
-
-/* Color/shape of burger icon bars */
-.bm-burger-bars {
-  background: #373a47;
-}
-
-/* Color/shape of burger icon bars on hover*/
-.bm-burger-bars-hover {
-  background: #a90000;
-}
-
-/* Position and sizing of clickable cross button */
-.bm-cross-button {
+  width: 32px;
   height: 24px;
-  width: 24px;
+  left: 30px;
+  top: 32px;
+  z-index: 9999 !important;
+  transition: transform 0.3s ease;
 }
 
-/* Color/shape of close button cross */
+.bm-burger-button:hover {
+  transform: scale(1.1); /* Efecto sutil al pasar el mouse */
+}
+
+/* Barras del icono: Más finas y elegantes */
+.bm-burger-bars {
+  background: #ffffff !important;
+  border-radius: 10px; /* Bordes totalmente redondeados */
+  height: 12% !important; /* Más delgadas para un look moderno */
+  opacity: 0.9;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2); /* Sombra suave para que resalte */
+}
+
+.bm-burger-bars-hover {
+  background: #a3d5ff !important; /* Azul muy claro al interactuar */
+  opacity: 1;
+}
+
+/* --- BOTÓN DE CIERRE (Cruz) --- */
+.bm-cross-button {
+  height: 32px;
+  width: 32px;
+  top: 25px !important;
+  right: 25px !important;
+}
+
 .bm-cross {
-  background: #bdc3c7;
+  background: #ffffff !important;
+  height: 3px !important; /* Más fina */
+  border-radius: 5px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.2);
 }
 
-/*
-Sidebar wrapper styles
-Note: Beware of modifying this element as it can break the animations - you should not need to touch it in most cases
-*/
+/* --- CONTENEDOR DEL MENÚ --- */
 .bm-menu-wrap {
   position: fixed;
   height: 100%;
+  top: 0;
+  z-index: 9998 !important;
+  /* Sombra lateral suave para que no se vea plano */
+  box-shadow: 5px 0 20px rgba(0, 0, 0, 0.3); 
 }
 
-/* General sidebar styles */
+/* EL PANEL DEL MENÚ (Fondo) */
 .bm-menu {
-  background: #373a47;
-  padding: 2.5em 1.5em 0;
+  /* Degradado sutil en azul profundo para dar profundidad */
+  background: linear-gradient(160deg, #1a3c6d 0%, #132f56 100%);
+  padding: 4em 2em 0;
   font-size: 1.15em;
+  border-right: 1px solid rgba(255, 255, 255, 0.05); /* Borde casi invisible */
 }
 
-/* Morph shape necessary with bubble or elastic */
-.bm-morph-shape {
-  fill: #373a47;
-}
-
-/* Wrapper for item list */
+/* --- LISTA DE ELEMENTOS --- */
 .bm-item-list {
-  color: #b8b7ad;
-  padding: 0.8em;
+  color: #f0f7ff;
+  padding: 0.5em;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
-/* Individual item */
+/* Items individuales (Enlaces) */
 .bm-item {
-  display: inline-block;
+  display: flex !important; /* Para alinear iconos si los hubiera */
+  align-items: center;
+  text-decoration: none;
+  color: rgba(255, 255, 255, 0.85); /* Blanco ligeramente transparente (más suave) */
+  font-family: 'Segoe UI', sans-serif;
+  font-weight: 500;
+  font-size: 1.1rem;
+  padding: 10px 15px;
+  border-radius: 12px; /* Fondo redondeado al hacer hover */
+  transition: all 0.3s ease;
+  outline: none;
+  position: relative;
 }
 
-/* Styling of overlay */
-.bm-overlay {
-  background: rgba(0, 0, 0, 0.3);
+/* Efecto Hover: Fondo suave y texto brillante */
+.bm-item:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.1); /* Fondo blanco semitransparente */
+  transform: translateX(5px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
+
+/* Íconos dentro del menú (si usas emojis o svgs) */
+.bm-item span {
+  margin-right: 10px;
+}
+
+/* --- SECCIÓN DE BIENVENIDA (Dashboard) --- */
+/* Estilos específicos para cuando estás logueado */
+.menu-header {
+  font-family: 'Georgia', serif;
+  font-size: 1.6rem;
+  color: #a3d5ff; /* Azul cielo para el nombre */
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+
+/* Bot

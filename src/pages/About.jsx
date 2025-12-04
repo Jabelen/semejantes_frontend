@@ -13,7 +13,7 @@ export default function About() {
             <div className="about-hero">
                 <img src={fotoFamilia} alt="Familia Semejantes" className="about-hero-img" />
                 <div className="about-hero-content">
-                    <h1>Nuestra Familia</h1>
+                    <h1>Quiénes Somos</h1>
                     <h3>ONG Semejantes</h3>
                 </div>
             </div>

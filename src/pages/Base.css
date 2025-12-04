@@ -1,62 +1,68 @@
-/* Estilos para el Dashboard (Base.jsx) */
+/* src/pages/Base.css */
+
+:root {
+  --blue-deep: #1a3c6d;
+  --blue-soft: #f0f7ff;
+  --text-dark: #333;
+}
+
+/* Contenedor principal de la aplicación */
 #outer-container {
   height: 100vh;
-  background-color: #f4f6f8;
+  background-color: var(--blue-soft); /* Fondo unificado con el resto del sitio */
+  font-family: 'Segoe UI', sans-serif;
+  overflow: hidden; /* Evita doble scroll */
 }
 
+/* Contenedor del contenido que se desplaza al abrir el menú */
 #page-wrap {
   height: 100%;
-  overflow-y: auto;
+  overflow-y: auto; /* El scroll ocurre aquí dentro */
   transition: all 0.3s ease;
+  background-color: var(--blue-soft);
 }
 
+/* Área de contenido del Dashboard */
 .dashboard-content {
-  padding: 20px;
+  padding: 40px 20px;
   max-width: 1200px;
   margin: 0 auto;
+  min-height: 85vh; /* Asegura altura mínima visual */
 }
 
-/* Estilos para el menú lateral (Burger Menu) */
-.bm-item {
-  display: inline-block;
-  text-decoration: none;
-  margin-bottom: 10px;
-  color: #d1d5db;
-  transition: color 0.2s;
-  cursor: pointer;
-  font-size: 1.1rem;
-}
+/* --- Estilos Específicos dentro del Menú Lateral --- */
+/* (Estos complementan a BurgerMenu.css) */
 
-.bm-item:hover {
-  color: white;
-}
-
-.bm-burger-button {
-  position: fixed;
-  width: 30px;
-  height: 25px;
-  left: 25px;
-  top: 25px;
-  z-index: 1000; /* Asegura que esté sobre el header */
-}
-
-/* Header del menú */
+/* Header del menú ("Hola, [Nombre]") */
 .menu-header {
-  color: white;
-  font-size: 1.5rem;
+  color: #ffffff;
+  font-family: 'Georgia', serif; /* Fuente sentimental para el saludo */
+  font-size: 1.8rem;
   font-weight: bold;
   margin-bottom: 30px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #4b5563;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Línea separadora sutil */
+  text-align: center;
+  letter-spacing: 0.5px;
 }
 
-/* Botón de logout */
+/* Ajustes finos para los items del menú en este contexto */
+.bm-item {
+  font-size: 1.1rem;
+  padding: 5px 0;
+  outline: none; /* Quita el borde de selección al hacer clic */
+}
+
+/* Botón de Cerrar Sesión (Logout) destacado */
 .menu-item.logout {
-  margin-top: 40px;
-  color: #f87171;
-  font-weight: bold;
+  margin-top: 40px; /* Separación del resto de opciones */
+  color: #ffcccc; /* Un tono rojizo suave que se ve bien sobre el azul oscuro */
+  font-weight: 600;
+  border-top: 1px solid rgba(255, 255, 255, 0.1); /* Separador superior */
+  padding-top: 20px;
+  transition: color 0.3s ease;
 }
 
 .menu-item.logout:hover {
-  color: #ef4444;
+  color: #ff6b6b; /* Rojo más vivo al pasar el mouse */
 }

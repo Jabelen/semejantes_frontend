@@ -36,7 +36,6 @@ export default function Alliance() {
 
                 {/* SECCIÓN DE LOGOS LADO A LADO */}
                 <div className="partners-section">
-                    <h2 className="partners-title">Nuestra Alianza Estratégica</h2>
                     
                     <div className="logos-grid">
                         {/* Logo 1: Alianza Cristiana y Misionera */}
