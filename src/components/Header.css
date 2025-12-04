@@ -1,10 +1,67 @@
-.row{
-    display: flex; /*cosas con clase row se hacen tipo flexible*/
-    flex-direction: row; /**/
-    justify-content: space-evenly;
-    align-items: center;
+/* src/components/Header.css */
+
+.header {
+  background-color: #1a3c6d;
+  width: 100%;
+  padding: 15px 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  
+  /* --- CAMBIOS PARA HACERLO FLOTANTE --- */
+  position: sticky; /* Se comporta normal hasta que haces scroll, luego se pega */
+  top: 0;           /* Se queda pegado justo en el borde superior */
+  z-index: 1000;    /* Asegura que el header flote POR ENCIMA del resto del contenido */
 }
 
-.header-text{
-    font-size: 20px;
+/* ... (El resto de tu código CSS para .row, .logo, .header-text sigue igual) ... */
+.row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.logo {
+  height: 55px;
+  width: auto;
+  object-fit: contain;
+  filter: brightness(0) invert(1); 
+  transition: transform 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+}
+
+.header-text {
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #ecf0f1;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 25px;
+  transition: all 0.3s ease;
+  margin-left: 5px;
+}
+
+.header-text:hover {
+  background-color: #2d89ef;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+}
+
+@media (max-width: 900px) {
+  .row {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .header-text {
+    font-size: 14px;
+    padding: 6px 10px;
+  }
 }

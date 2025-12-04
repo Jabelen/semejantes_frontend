@@ -1,7 +1,7 @@
 const images = [
   {
     imgURL:
-      "https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260",
+      "https://semejantes-api-files.s3.us-east-2.amazonaws.com/1764702541217-foto1.jpeg",
     imgAlt: "img-1"
   },
   {

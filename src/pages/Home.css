@@ -1,42 +1,134 @@
-#root {
-  min-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+/* src/pages/Home.css */
+
+:root {
+  --blue-deep: #1a3c6d;
+  --blue-soft: #f0f7ff;
+  --blue-vibrant: #2d89ef;
+  --white: #ffffff;
+  --text-dark: #333;
+  --shadow-soft: 0 10px 30px rgba(26, 60, 109, 0.15);
+}
+
+.home-page {
+  background-color: var(--blue-soft);
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+  padding-bottom: 80px;
+}
+
+/* --- HERO SECTION: Portada --- */
+.home-hero {
+  position: relative;
+  height: 85vh; /* Ocupa casi toda la pantalla */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
+  overflow: hidden;
+  margin-bottom: 50px;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.hero-bg-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* Filtro para que la imagen se vea azulada y nostálgica */
+  filter: sepia(30%) hue-rotate(180deg) brightness(0.8);
+  z-index: 0;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Capa azul semitransparente sobre la foto */
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(26, 60, 109, 0.85), rgba(45, 137, 239, 0.6));
+  z-index: 1;
 }
 
-.card {
-  padding: 2em;
+.hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 20px;
+  color: var(--white);
+  max-width: 800px;
+  animation: fadeInUp 1.2s ease-out;
 }
 
-.read-the-docs {
-  color: #888;
+/* Títulos emotivos */
+.hero-subtitle {
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  font-size: 1rem;
+  opacity: 0.9;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.hero-title {
+  font-family: 'Georgia', serif; /* Fuente sentimental */
+  font-size: 3.5rem;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.hero-quote {
+  font-size: 1.4rem;
+  font-style: italic;
+  font-weight: 300;
+  opacity: 0.9;
+  border-top: 1px solid rgba(255,255,255,0.4);
+  display: inline-block;
+  padding-top: 20px;
+  margin-top: 10px;
+}
+
+/* --- SECCIÓN SLIDER (Estilo Álbum) --- */
+.slider-section {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 2;
+}
+
+.album-frame {
+  background: var(--white);
+  padding: 20px 20px 50px 20px; /* Más espacio abajo como una foto polaroid */
+  border-radius: 4px; /* Bordes casi rectos como foto impresa */
+  box-shadow: var(--shadow-soft);
+  transform: rotate(-1deg); /* Ligera rotación para que parezca "hecho a mano" */
+  transition: transform 0.3s ease;
+}
+
+.album-frame:hover {
+  transform: rotate(0deg) scale(1.01);
+}
+
+.album-title {
+  text-align: center;
+  color: var(--blue-deep);
+  font-family: 'Georgia', serif;
+  margin-bottom: 20px;
+  font-size: 2rem;
+}
+
+/* Animación de entrada */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero-title { font-size: 2.5rem; }
+  .home-hero { height: 70vh; }
+  .album-frame { padding: 10px; transform: none; }
 }

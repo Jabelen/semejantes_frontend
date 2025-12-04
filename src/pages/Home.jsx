@@ -2,15 +2,16 @@ import { useState, useEffect } from "react";
 import Header from "../components/Header.jsx";
 import FloatingButton from "../components/FloatingButton";
 import Slider from "../components/Slider.jsx";
-// 1. IMPORTAMOS LOS NUEVOS ESTILOS COMPARTIDOS
 import "../components/SharedSliderStyles.css";
 import "./Home.css";
+
+// Importamos la imagen para el fondo
+import heroBg from "../assets/foto2.jpeg"; 
 
 const DEFAULT_IMAGE =
   "https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260";
 
 function Home() {
-  // ... (Todo el código de useState, useEffect y fetchEventsImages sigue IGUAL) ...
   const [slides, setSlides] = useState([]);
   const API_URL = import.meta.env.VITE_API_URL;
 
@@ -36,7 +37,7 @@ function Home() {
           setSlides(
             last4Events.map((ev) => ({
               imgURL: ev.images[0],
-              imgAlt: ev.title, // Usamos esto como título
+              imgAlt: ev.title, 
             }))
           );
         } else {
@@ -52,50 +53,57 @@ function Home() {
   };
 
   return (
-    <>
-      <div>
-        <Header />
-      </div>
-      <div className="home-hero-text">
-        {" "}
-        {/* Asegúrate de tener estilos para esto en Home.css si quieres */}
-        <h2>ONG Semejantes</h2>
-        <h1>Integrando a personas con discapacidad</h1>
-        <h2>Porque cada persona es valiosa, amada y tiene propósito en Dios</h2>
+    <div className="home-page">
+      <Header />
+
+      {/* SECCIÓN HERO: Imagen Grande y Texto Emotivo */}
+      <div className="home-hero">
+        <img src={heroBg} alt="Comunidad Semejantes" className="hero-bg-image" />
+        <div className="hero-overlay"></div>
+        
+        <div className="hero-content">
+          <span className="hero-subtitle">ONG Semejantes</span>
+          <h1 className="hero-title">Integrando corazones, transformando vidas</h1>
+          <p className="hero-quote">
+            "Porque cada persona es valiosa, amada y tiene un propósito especial en Dios."
+          </p>
+        </div>
       </div>
 
-      {/* 2. USAMOS EL NUEVO CONTENEDOR WRAPPER */}
-      <div className="slider-wrapper-centered">
-        {slides.length > 0 ? (
-          <Slider>
-            {slides.map((slide, index) => {
-              // 3. CAMBIAMOS LA ESTRUCTURA INTERNA
-              return (
-                <div key={index} className="slide-item-container">
-                  <img
-                    src={slide.imgURL}
-                    alt={slide.imgAlt}
-                    className="slide-image-centered"
-                  />
-                  {/* Capa del título */}
-                  <div className="slide-title-overlay">
-                    <h3 className="slide-title-text">{slide.imgAlt}</h3>
-                  </div>
-                </div>
-              );
-            })}
-          </Slider>
-        ) : (
-          <div style={{ padding: "50px", textAlign: "center" }}>
-            Cargando eventos recientes...
+      {/* SECCIÓN SLIDER: Con marco de foto */}
+      <div className="slider-section">
+        <h2 className="album-title">Nuestros Momentos Recientes</h2>
+        
+        <div className="album-frame">
+          <div className="slider-wrapper-centered">
+            {slides.length > 0 ? (
+              <Slider>
+                {slides.map((slide, index) => {
+                  return (
+                    <div key={index} className="slide-item-container">
+                      <img
+                        src={slide.imgURL}
+                        alt={slide.imgAlt}
+                        className="slide-image-centered"
+                      />
+                      <div className="slide-title-overlay">
+                        <h3 className="slide-title-text">{slide.imgAlt}</h3>
+                      </div>
+                    </div>
+                  );
+                })}
+              </Slider>
+            ) : (
+              <div style={{ padding: "50px", textAlign: "center" }}>
+                Cargando recuerdos...
+              </div>
+            )}
           </div>
-        )}
+        </div>
       </div>
 
-      <div>
-        <FloatingButton />
-      </div>
-    </>
+      <FloatingButton />
+    </div>
   );
 }
 

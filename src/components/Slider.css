@@ -1,3 +1,6 @@
+/* src/components/Slider.css */
+
+/* Contenedor principal: Transparente para que se vea el marco del álbum */
 .container__slider {
   position: relative;
   width: 100%;
@@ -8,96 +11,94 @@
   align-items: center;
   flex-direction: row;
   flex-wrap: nowrap;
-  background-color: black;
+  background-color: transparent; /* Importante: quitamos el negro */
+  border-radius: 4px; /* Suaviza las esquinas de la imagen */
 }
 
-.container__slider > button {
-  background-color: transparent;
-  outline: none;
-  border: 0;
-  color: whitesmoke;
-  font-size: 24px;
-}
-
-.container__slider > button:active {
-  color: black;
-}
-
-.slider__btn-next {
-  position: absolute;
-  right: 0;
-}
-
-.slider__btn-prev {
-  position: absolute;
-  left: 0;
-}
-
-.container__slider__links {
-  position: absolute;
-  bottom: 5%;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.container__slider__links-small {
-  position: relative;
-  width: 8px;
-  height: 8px;
-  padding: 0;
-  border-radius: 50%;
-  outline: none;
-  border: 0;
-  background-color: white;
-  border: 1px solid grey;
-  transition: background-color 1s ease;
-  margin: 0 2px;
-}
-
-.container__slider__links-small-active {
-  background-color: black;
-}
-
+/* --- Animación de los Slides --- */
 .slider__item {
   box-sizing: border-box;
   min-width: 100%;
-  height: auto;
-  overflow: hidden;
-  object-fit: cover;
-  height: auto;
-  transform: translateX(0);
-  transition: transform 1s ease;
+  transition: transform 0.8s cubic-bezier(0.25, 1, 0.5, 1); /* Transición más suave y natural */
+  position: relative;
 }
 
-.slider__item-active-1 {
-  transform: translateX(0);
-}
+/* Clases para mover el carrusel (Lógica existente) */
+.slider__item-active-1 { transform: translateX(0); }
+.slider__item-active-2 { transform: translateX(-100%); }
+.slider__item-active-3 { transform: translateX(-200%); }
+.slider__item-active-4 { transform: translateX(-300%); }
+.slider__item-active-5 { transform: translateX(-400%); }
 
-.slider__item-active-2 {
-  transform: translateX(-100%);
-}
-
-.slider__item-active-3 {
-  transform: translateX(-200%);
-}
-
-.slider__item-active-4 {
-  transform: translateX(-300%);
-}
-
-.slider__item-active-5 {
-  transform: translateX(-300%);
-}
-
-.slider__item-active-6 {
-  transform: translateX(-300%);
-}
-
-.slider__item-active-7 {
-  transform: translateX(-300%);
-}
-
+/* Aseguramos que la imagen llene el espacio */
 .slider__item img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* --- Botones de Navegación (Flechas) --- */
+.container__slider > button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 45px;
+  height: 45px;
+  background-color: rgba(255, 255, 255, 0.8); /* Fondo semitransparente */
+  border: none;
+  border-radius: 50%; /* Circulares */
+  color: #1a3c6d; /* Azul profundo */
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.slider__btn-prev { left: 15px; }
+.slider__btn-next { right: 15px; }
+
+/* Efecto Hover en los botones */
+.container__slider > button:hover {
+  background-color: #2d89ef; /* Azul vibrante al pasar el mouse */
+  color: white;
+  transform: translateY(-50%) scale(1.1); /* Pequeño zoom */
+}
+
+.container__slider > button:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+/* --- Puntos de Paginación (Dots) --- */
+.container__slider__links {
+  position: absolute;
+  bottom: 20px; /* Un poco más arriba */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px; /* Espacio entre puntos */
+  z-index: 10;
+}
+
+.container__slider__links-small {
+  width: 12px;
+  height: 12px;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid white; /* Borde blanco para resaltar sobre fotos oscuras */
+  background-color: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
+
+.container__slider__links-small-active {
+  background-color: #2d89ef; /* Azul vibrante activo */
+  border-color: #2d89ef;
+  transform: scale(1.2);
 }

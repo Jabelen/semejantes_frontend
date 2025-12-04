@@ -1,57 +1,137 @@
+/* src/components/EventCard.css */
+
 .card-container {
-  width: 100%;
-  max-width: 900px;
+  background-color: #ffffff;
+  border-radius: 16px; /* Bordes muy redondeados */
+  box-shadow: 0 10px 25px rgba(26, 60, 109, 0.1); /* Sombra azulada suave */
+  margin: 20px auto;
+  overflow: hidden; /* Para que la imagen respete los bordes */
   display: flex;
-  border: 2px solid black;
-  margin: auto;
+  flex-direction: row; /* Imagen a la izquierda, texto a la derecha */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid rgba(26, 60, 109, 0.1); /* Borde sutil */
+  max-width: 900px;
+  width: 100%;
 }
 
+.card-container:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 35px rgba(26, 60, 109, 0.15);
+}
+
+/* --- Sección Izquierda (Información) --- */
+/* NOTA: En tu JSX original 'left-section' tenía el texto. 
+   Vamos a invertir el orden visual o mantenerlo según prefieras, 
+   pero aquí asumiremos que el texto es lo principal. */
+
 .left-section {
-  width: 50%;
-  background-color: #0066cc;
-  color: white;
-  padding: 40px;
+  flex: 1; /* Ocupa el espacio restante */
+  padding: 30px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  background-color: #fff;
+  color: #333;
 }
 
-.text {
-  font-size: 1.3rem;
+.event-title {
+  font-family: 'Georgia', serif; /* Fuente sentimental */
+  font-size: 1.8rem;
+  color: #1a3c6d; /* Azul profundo */
+  margin-top: 0;
   margin-bottom: 10px;
 }
 
+.event-desc {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #555;
+  margin-bottom: 20px;
+  flex-grow: 1;
+}
+
+.event-details {
+  background-color: #f0f7ff; /* Azul muy suave de fondo */
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  border-left: 4px solid #2d89ef; /* Línea de acento */
+}
+
+.event-details p {
+  margin: 5px 0;
+  color: #444;
+}
+
+/* --- Botones de Acción --- */
+.card-actions {
+  margin-top: 20px;
+  display: flex;
+  gap: 15px;
+}
+
 .btn-inscribir {
-  padding: 10px 20px;
-  background-color: white;
-  color: #0066cc;
-  font-weight: bold;
-  border: 2px solid white;
+  background-color: #2d89ef; /* Azul vibrante */
+  color: white;
+  padding: 10px 24px;
+  border-radius: 25px; /* Botón píldora */
+  border: none;
+  font-weight: 600;
   cursor: pointer;
+  transition: background 0.3s;
+  box-shadow: 0 4px 6px rgba(45, 137, 239, 0.3);
 }
 
 .btn-inscribir:hover {
-  background-color: #e6e6e6;
+  background-color: #1a3c6d;
 }
 
+.btn-inscribir.disabled {
+  background-color: #a0aec0;
+  cursor: default;
+  box-shadow: none;
+}
+
+.btn-delete {
+  background-color: transparent;
+  color: #e53e3e;
+  border: 1px solid #e53e3e;
+  padding: 8px 16px;
+  border-radius: 25px;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.btn-delete:hover {
+  background-color: #fff5f5;
+}
+
+/* --- Sección Derecha (Imagen) --- */
 .right-section {
-  width: 50%;
+  width: 40%; /* Ancho fijo para la imagen */
   position: relative;
+  min-height: 100%;
 }
 
-.image {
+.right-section .image {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
 }
 
-/* Línea diagonal */
+/* Eliminamos la diagonal antigua para un look más limpio */
 .diagonal {
-  position: absolute;
-  left: -1px;
-  top: 0;
-  width: 2px;
-  height: 100%;
-  border-left: 2px solid black;
-  transform: skewX(35deg);
+  display: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card-container {
+    flex-direction: column-reverse; /* Imagen arriba en móviles */
+  }
+  .right-section {
+    width: 100%;
+    height: 200px;
+  }
 }

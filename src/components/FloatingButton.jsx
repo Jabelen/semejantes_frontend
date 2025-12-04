@@ -1,9 +1,23 @@
-import './FloatingButton.css'
+import React from 'react';
+import './FloatingButton.css';
+// Importa el nuevo icono de usuario
+import icon from '../assets/floating_button_user_icon.png'; 
 
-export default function FloatingButton({ onClick, children }) {
+const FloatingButton = () => {
+  const handleClick = () => {
+    // Aquí puedes definir la acción que quieres que realice el botón
+    console.log('Botón de perfil presionado');
+    // Por ejemplo, navegar a la página de perfil del usuario
+    window.location.href = '/base';
+  };
+
   return (
-    <a className="floating-button" href = '/base'>
-      {children || "+"}
-    </a>
+    <div className="floating-button-container">
+      <button className="floating-button" onClick={handleClick}>
+        <img src={icon} alt="Icono de Usuario" className="floating-button-icon" />
+      </button>
+    </div>
   );
-}
+};
+
+export default FloatingButton;
