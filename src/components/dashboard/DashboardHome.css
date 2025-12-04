@@ -1,10 +1,14 @@
 .dash-home-container {
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 20px;
   padding: 20px 0;
   text-align: center;
-  font-family: "Segoe UI", sans-serif; /* O la fuente que uses estilo "handwritten" si tienes */
+  font-family: "Segoe UI", sans-serif;
+}
+
+.dash-intro {
+  margin-bottom: 30px;
 }
 
 .org-subtitle {
@@ -16,18 +20,18 @@
 }
 
 .org-title {
-  font-size: 3.5rem;
+  font-size: 3rem;
   line-height: 1.1;
   color: #000;
   margin: 10px 0 20px 0;
-  font-weight: 900; /* Letra muy gruesa como el dibujo */
+  font-weight: 900;
 }
 
 .org-quote-container {
   display: inline-block;
-  background-color: #fffacd; /* Amarillo suave tipo resaltador */
+  background-color: #fffacd;
   padding: 5px 20px;
-  transform: rotate(-1deg); /* Un toque "manual" */
+  transform: rotate(-1deg);
   margin-bottom: 20px;
 }
 
@@ -38,7 +42,38 @@
   margin: 0;
 }
 
-/* Grilla de Botones */
+/* --- SECCIÓN PERFIL DESTACADO --- */
+.profile-shortcut-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.profile-card-wide {
+  width: 100%;
+  max-width: 500px; /* Más ancho que los normales */
+  height: auto;
+  flex-direction: row !important; /* Icono al lado del texto */
+  gap: 20px;
+  background-color: #f0f8ff !important; /* Fondo azulito suave */
+  border-color: #0066cc !important;
+}
+
+.card-subtitle {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+  font-weight: normal;
+}
+
+.divider-line {
+  height: 2px;
+  background-color: #eee;
+  width: 80%;
+  margin: 0 auto 30px auto;
+}
+
+/* --- GRILLA NORMAL --- */
 .quick-actions-grid {
   display: flex;
   justify-content: center;
@@ -48,18 +83,18 @@
 
 .action-card {
   background: white;
-  border: 3px solid #000; /* Borde negro grueso como el dibujo */
-  border-radius: 0; /* Cuadrados */
-  padding: 20px 40px;
-  width: 250px;
-  height: 120px;
+  border: 3px solid #000;
+  border-radius: 0;
+  padding: 20px;
+  width: 220px;
+  min-height: 130px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
-  box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.2); /* Sombra sólida */
+  box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.2);
 }
 
 .action-card:hover {
@@ -69,13 +104,14 @@
 }
 
 .card-title {
-  font-size: 1.8rem;
-  font-weight: 600;
+  font-size: 1.4rem;
+  font-weight: 700;
   color: #333;
+  margin-bottom: 5px;
 }
 
 .card-icon {
-  font-size: 1.5rem;
+  font-size: 2rem;
   margin-top: 5px;
 }
 
@@ -85,4 +121,5 @@
   margin: 0 auto;
   border: 2px solid #333;
   padding: 10px;
+  background: white;
 }

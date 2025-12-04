@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router"; // <--- 1. IMPORTAR ESTO
 import Slider from "../Slider";
 import "../../components/SharedSliderStyles.css";
 import "./DashboardHome.css";
@@ -8,6 +9,7 @@ const DEFAULT_IMAGE =
 
 export default function DashboardHome({ setView, userRole }) {
   const [slides, setSlides] = useState([]);
+  const navigate = useNavigate(); // <--- 2. INICIALIZAR
   const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
@@ -50,31 +52,49 @@ export default function DashboardHome({ setView, userRole }) {
         </div>
       </div>
 
-      {/* --- BOTONES DINÁMICOS SEGÚN ROL --- */}
+      {/* --- BOTÓN DE PERFIL (Destacado) --- */}
+      <div className="profile-shortcut-container">
+        {/* Este sí usa setView para quedarse en el dashboard y ver el perfil */}
+        <button
+          className="action-card profile-card-wide"
+          onClick={() => setView("profile")}
+        >
+          <span className="card-icon">👤</span>
+          <div>
+            <span className="card-title">Mi Perfil</span>
+          </div>
+        </button>
+      </div>
+
+      <div className="divider-line"></div>
+
       <div className="quick-actions-grid">
-        {/* Botones para COORDINADOR */}
+        {/* COORDINADOR */}
         {userRole === "Coordinator" && (
           <>
+            {/* Usuarios y Solicitudes se quedan en el Dashboard (vistas internas) */}
             <button className="action-card" onClick={() => setView("users")}>
               <span className="card-title">Aprobar Usuarios</span>
               <span className="card-icon">👥</span>
             </button>
 
-            <button className="action-card" onClick={() => setView("events")}>
-              <span className="card-title">Crear Eventos</span>
+            {/* Eventos: Redirige a la página completa /events */}
+            <button className="action-card" onClick={() => navigate("/events")}>
+              <span className="card-title">Gestionar Eventos</span>
               <span className="card-icon">📅</span>
             </button>
 
+            {/* Donaciones: Redirige a la página completa /donations */}
             <button
               className="action-card"
               onClick={() => setView("donations")}
             >
-              <span className="card-title">Donaciones</span>
+              <span className="card-title">Gestionar Donaciones</span>
               <span className="card-icon">🎁</span>
             </button>
 
             <button className="action-card" onClick={() => setView("requests")}>
-              <span className="card-title">Solicitudes</span>
+              <span className="card-title">Resolver Solicitudes</span>
               <span className="card-icon">📝</span>
             </button>
 
@@ -85,23 +105,30 @@ export default function DashboardHome({ setView, userRole }) {
           </>
         )}
 
-        {/* Botones para VOLUNTARIO (Si entra un voluntario) */}
+        {/* VOLUNTARIO */}
         {userRole === "Volunteer" && (
           <>
-            <button className="action-card" onClick={() => setView("events")}>
-              <span className="card-title">Inscribirme</span>
+            {/* Eventos: Redirige a /events */}
+            <button className="action-card" onClick={() => navigate("/events")}>
+              <span className="card-title">Inscribirme en Eventos</span>
               <span className="card-icon">🙋</span>
             </button>
+
+            {/* Solicitudes: Se queda en el Dashboard */}
             <button className="action-card" onClick={() => setView("requests")}>
-              <span className="card-title">Pedir Ayuda</span>
+              <span className="card-title">Solicitar Ayuda</span>
               <span className="card-icon">🙏</span>
             </button>
           </>
         )}
       </div>
 
-      {/* Slider */}
-      <div className="slider-wrapper-centered" style={{ marginTop: "40px" }}>
+      <div className="slider-wrapper-centered" style={{ marginTop: "60px" }}>
+        <h3
+          style={{ textAlign: "center", marginBottom: "20px", color: "#555" }}
+        >
+          Últimos Eventos
+        </h3>
         {slides.length > 0 ? (
           <Slider>
             {slides.map((slide, index) => (
