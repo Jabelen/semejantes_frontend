@@ -1,0 +1,126 @@
+/* src/pages/Alliance.css */
+
+:root {
+  --blue-deep: #1a3c6d;
+  --blue-soft: #f0f7ff;
+  --white: #ffffff;
+  --text-gray: #555;
+  --shadow-card: 0 10px 25px rgba(26, 60, 109, 0.1);
+}
+
+.alliance-page {
+  background-color: var(--blue-soft);
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+  padding-bottom: 80px;
+}
+
+/* --- HERO SECTION --- */
+.alliance-hero {
+  background-color: var(--blue-deep);
+  color: var(--white);
+  padding: 60px 20px;
+  text-align: center;
+  border-radius: 0 0 50px 50px; /* Curva suave abajo */
+  margin-bottom: 50px;
+  box-shadow: 0 10px 20px rgba(26, 60, 109, 0.2);
+}
+
+.alliance-hero h1 {
+  font-family: 'Georgia', serif;
+  font-size: 3rem;
+  margin: 0 0 10px 0;
+}
+
+.alliance-hero h2 {
+  font-size: 1.2rem;
+  font-weight: 300;
+  opacity: 0.9;
+  font-style: italic;
+  letter-spacing: 1px;
+}
+
+/* --- CONTENEDOR PRINCIPAL --- */
+.alliance-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+/* Tarjeta de Texto Principal */
+.alliance-intro-card {
+  background: var(--white);
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+  text-align: center;
+  margin-bottom: 60px;
+  border-top: 5px solid #2d89ef; /* Detalle azul vibrante */
+}
+
+.alliance-intro-card p {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: var(--text-gray);
+  margin-bottom: 15px;
+}
+
+/* --- SECCIÓN DE LOGOS (Partners) --- */
+.partners-section {
+  text-align: center;
+}
+
+.partners-title {
+  color: var(--blue-deep);
+  font-family: 'Georgia', serif;
+  font-size: 2rem;
+  margin-bottom: 40px;
+  position: relative;
+  display: inline-block;
+}
+
+/* Línea decorativa bajo el título */
+.partners-title::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 3px;
+  background-color: #2d89ef;
+  margin: 10px auto 0 auto;
+}
+
+/* Grid para los logos */
+.logos-grid {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 60px; /* Espacio generoso entre logos */
+  flex-wrap: wrap;
+}
+
+.partner-logo {
+  max-width: 350px; /* Tamaño máximo para que se vean bien */
+  width: 100%;     /* Responsivo */
+  height: auto;
+  filter: grayscale(10%); /* Un toque sutil para unificarlos */
+  transition: transform 0.3s ease, filter 0.3s ease;
+  padding: 10px;
+  background: white;
+  border-radius: 12px;
+  /* Opcional: si los logos no tienen fondo, esta sombra ayuda a enmarcarlos */
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05); 
+}
+
+.partner-logo:hover {
+  transform: scale(1.05); /* Efecto zoom suave */
+  filter: grayscale(0%);  /* A todo color al pasar el mouse */
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .logos-grid {
+    flex-direction: column;
+    gap: 30px;
+  }
+}
