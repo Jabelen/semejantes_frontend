@@ -3,14 +3,15 @@ import { useNavigate } from "react-router";
 import "./Login.css";
 import Header from "../components/Header";
 
+// Importamos la imagen familiar
+import loginBg from "../assets/foto1.jpeg";
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const API_URL = import.meta.env.VITE_API_URL;
 
-  // 1. PROTECCIÓN: Si ya está logueado, lo mandamos al Dashboard
-  // Esto impide que vea el formulario si presiona "Atrás" después de entrar.
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
@@ -37,15 +38,10 @@ const Login = () => {
         return;
       }
 
-      // Guardar sesión
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      alert("¡Bienvenido!");
-
-      // 2. REDIRECCIÓN CON REPLACE:
-      // 'replace: true' sustituye la entrada actual (Login) en el historial por la nueva (Base).
-      // Así, el botón "Atrás" del navegador saltará el Login y te llevará a la página anterior a esa (ej: Home o Google).
+      alert("¡Bienvenido a casa!"); // Mensaje más cálido
       navigate("/base", { replace: true });
     } catch (error) {
       console.error("Error de conexión:", error);
@@ -54,51 +50,70 @@ const Login = () => {
   };
 
   return (
-    <>
-      <div>
-        <Header />
-      </div>
+    <div className="login-page">
+      <Header />
+      
       <div className="login-container">
-        <form className="login-form" onSubmit={handleSubmit}>
-          <h2>Iniciar Sesión</h2>
-
-          <div className="form-group">
-            <label htmlFor="email">Correo Electrónico:</label>
-            <input
-              type="email"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              placeholder="ejemplo@dominio.com"
-            />
+        <div className="login-card">
+          
+          {/* SECCIÓN IZQUIERDA: IMAGEN EMOTIVA */}
+          <div className="login-image-section">
+            <img src={loginBg} alt="Comunidad" className="login-bg-image" />
+            <div className="login-quote">
+              "Donde hay fe, hay amor; donde hay amor, hay paz."
+            </div>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="password">Contraseña:</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              placeholder="Introduce tu contraseña"
-            />
+          {/* SECCIÓN DERECHA: FORMULARIO */}
+          <div className="login-form-section">
+            <form onSubmit={handleSubmit}>
+              <h2>Bienvenido</h2>
+              <p className="login-subtitle">Ingresa a tu cuenta para seguir colaborando</p>
+
+              <div className="form-group">
+                <label htmlFor="email">Correo Electrónico</label>
+                <input
+                  type="email"
+                  id="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  placeholder="nombre@ejemplo.com"
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="password">Contraseña</label>
+                <input
+                  type="password"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  placeholder="••••••••"
+                />
+              </div>
+
+              <button type="submit" className="login-button">
+                Iniciar Sesión
+              </button>
+
+              <div className="form-footer">
+                <a href="/login/forgot-password">¿Olvidaste tu contraseña?</a>
+              </div>
+              
+              <hr style={{ margin: "20px 0", border: "0", borderTop: "1px solid #eee" }} />
+              
+              <div className="form-footer">
+                <span>¿Aún no eres parte? </span>
+                <a href="/create-account">Únete al equipo</a>
+              </div>
+            </form>
           </div>
 
-          <button type="submit" className="login-button">
-            Entrar
-          </button>
-
-          <div className="form-footer">
-            <a href="/login/forgot-password">¿Olvidaste tu contraseña? </a>
-          </div>
-          <div className="form-footer">
-            <a href="/create-account"> Crear nueva cuenta</a>
-          </div>
-        </form>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 

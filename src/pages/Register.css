@@ -1,31 +1,105 @@
-/* Contenedor principal para centrar el formulario */
-.signup-container {
+/* src/pages/Register.css */
+
+:root {
+  --blue-deep: #1a3c6d;
+  --blue-soft: #f0f7ff;
+  --blue-vibrant: #2d89ef;
+  --white: #ffffff;
+  --text-gray: #555;
+  --shadow-card: 0 20px 40px rgba(26, 60, 109, 0.15);
+}
+
+.register-page {
+  background-color: var(--blue-soft);
+  min-height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+  display: flex;
+  flex-direction: column;
+}
+
+.register-container {
+  flex: 1;
   display: flex;
   justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background-color: #e9ecef; /* Un fondo ligeramente diferente para distinguir */
-  font-family: Arial, sans-serif;
-  padding: 20px 0; /* Espacio vertical si la pantalla es pequeña */
+  align-items: flex-start; /* Alineación superior para formularios largos */
+  padding: 40px 20px;
 }
 
-/* Estilos del formulario */
-.signup-form {
-  background-color: #ffffff;
-  padding: 40px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Sombra más pronunciada */
+/* Tarjeta Principal */
+.register-card {
+  background-color: var(--white);
+  border-radius: 20px;
+  box-shadow: var(--shadow-card);
+  display: flex;
+  overflow: hidden;
+  max-width: 1000px; /* Un poco más ancha que el login */
   width: 100%;
-  max-width: 450px; /* Un poco más ancho ya que tiene más campos */
+  margin-top: 20px;
 }
 
-.signup-form h2 {
+/* Sección Izquierda: Imagen (Sticky para que siga al usuario al hacer scroll) */
+.register-image-section {
+  flex: 0.8; /* Un poco más angosta que el formulario */
+  position: relative;
+  background-color: var(--blue-deep);
+  min-height: 600px;
+}
+
+.register-bg-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.5; 
+  filter: sepia(20%) hue-rotate(190deg);
+  position: absolute;
+}
+
+.register-quote-box {
+  position: absolute;
+  bottom: 50px;
+  left: 30px;
+  right: 30px;
+  color: white;
+  z-index: 2;
   text-align: center;
-  margin-bottom: 30px;
-  color: #2c3e50;
 }
 
-/* Estilos para cada grupo de formulario (etiqueta + input/select) */
+.register-quote-box h3 {
+  font-family: 'Georgia', serif;
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+}
+
+.register-quote-box p {
+  font-size: 1rem;
+  font-weight: 300;
+  opacity: 0.9;
+  font-style: italic;
+}
+
+/* Sección Derecha: Formulario */
+.register-form-section {
+  flex: 1.2;
+  padding: 50px;
+}
+
+.register-form-section h2 {
+  font-family: 'Georgia', serif;
+  color: var(--blue-deep);
+  font-size: 2.2rem;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.register-subtitle {
+  text-align: center;
+  color: var(--text-gray);
+  margin-bottom: 30px;
+  font-size: 0.95rem;
+}
+
+/* Grupos del Formulario */
 .form-group {
   margin-bottom: 20px;
 }
@@ -33,65 +107,82 @@
 .form-group label {
   display: block;
   margin-bottom: 8px;
-  font-weight: bold;
-  color: #34495e;
-  font-size: 14px;
+  font-weight: 600;
+  color: var(--blue-deep);
+  font-size: 0.9rem;
 }
 
-/* Estilos para campos de texto y el desplegable (select) */
 .form-group input,
 .form-group select {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #ced4da;
-  border-radius: 4px;
-  box-sizing: border-box;
-  font-size: 16px;
-  transition: border-color 0.3s, box-shadow 0.3s;
-  background-color: #f8f9fa;
+  padding: 12px 15px;
+  border: 1px solid #ccd;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #f9f9ff;
+  transition: all 0.3s;
 }
 
 .form-group input:focus,
 .form-group select:focus {
-  border-color: #28a745; /* Color verde para el foco */
-  box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+  border-color: var(--blue-vibrant);
+  background-color: white;
   outline: none;
-  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(45, 137, 239, 0.1);
 }
 
-/* Estilos del botón de envío */
+/* Botón de Registro */
 .signup-button {
   width: 100%;
-  padding: 12px;
-  background-color: #28a745; /* Color primario verde (éxito) */
+  padding: 14px;
+  background-color: var(--blue-vibrant);
   color: white;
   border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
+  border-radius: 30px;
+  font-size: 1.1rem;
   font-weight: bold;
-  transition: background-color 0.3s ease;
-  margin-top: 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 20px;
+  box-shadow: 0 4px 10px rgba(45, 137, 239, 0.3);
 }
 
 .signup-button:hover {
-  background-color: #1e7e34; /* Tono más oscuro al pasar el ratón */
+  background-color: var(--blue-deep);
+  transform: translateY(-2px);
 }
 
-/* Estilos del pie de página o enlaces adicionales */
+/* Pie del formulario */
 .form-footer {
   text-align: center;
   margin-top: 25px;
-  font-size: 14px;
-  color: #6c757d;
+  font-size: 0.9rem;
+  color: var(--text-gray);
 }
 
 .form-footer a {
-  color: #007bff;
+  color: var(--blue-vibrant);
+  font-weight: 600;
   text-decoration: none;
-  font-weight: bold;
 }
 
 .form-footer a:hover {
   text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .register-card {
+    flex-direction: column;
+  }
+  .register-image-section {
+    height: 200px;
+    min-height: 200px;
+  }
+  .register-quote-box {
+    display: none; /* Ocultar en móvil para ahorrar espacio */
+  }
+  .register-form-section {
+    padding: 30px 20px;
+  }
 }
