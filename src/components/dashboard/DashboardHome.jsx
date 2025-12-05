@@ -49,7 +49,7 @@ export default function DashboardHome({ setView, userRole }) {
 
             <button
               className="action-card"
-              onClick={() => navigate("/donations")}
+              onClick={() => setView("donations")}
             >
               <span className="card-title">Gestionar Donaciones</span>
               <span className="card-icon">🎁</span>
@@ -61,7 +61,7 @@ export default function DashboardHome({ setView, userRole }) {
             </button>
 
             <button className="action-card" onClick={() => setView("reports")}>
-              <span className="card-title">Ver Reportes</span>
+              <span className="card-title">Generar Reportes</span>
               <span className="card-icon">📊</span>
             </button>
           </>

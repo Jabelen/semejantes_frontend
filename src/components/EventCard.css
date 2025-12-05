@@ -12,6 +12,7 @@
   border: 1px solid rgba(26, 60, 109, 0.1); /* Borde sutil */
   max-width: 900px;
   width: 100%;
+  position: relative; /* Necesario para overlays */
 }
 
 .card-container:hover {
@@ -20,10 +21,6 @@
 }
 
 /* --- Sección Izquierda (Información) --- */
-/* NOTA: En tu JSX original 'left-section' tenía el texto. 
-   Vamos a invertir el orden visual o mantenerlo según prefieras, 
-   pero aquí asumiremos que el texto es lo principal. */
-
 .left-section {
   flex: 1; /* Ocupa el espacio restante */
   padding: 30px;
@@ -63,13 +60,19 @@
   color: #444;
 }
 
-/* --- Botones de Acción --- */
+.detail-item {
+  margin-bottom: 5px;
+}
+
+/* --- Botones de Acción Generales --- */
 .card-actions {
   margin-top: 20px;
   display: flex;
   gap: 15px;
+  align-items: center;
 }
 
+/* --- Botones Voluntario --- */
 .btn-inscribir {
   background-color: #2d89ef; /* Azul vibrante */
   color: white;
@@ -86,24 +89,92 @@
   background-color: #1a3c6d;
 }
 
-.btn-inscribir.disabled {
-  background-color: #a0aec0;
-  cursor: default;
+/* Estado: Finalizado (Gris oscuro / Bloqueado) */
+.btn-inscribir.disabled-passed {
+  background-color: #555 !important;
+  color: #ccc !important;
+  border: 2px solid #555 !important;
+  cursor: not-allowed !important;
+  opacity: 0.8;
+  pointer-events: none;
   box-shadow: none;
 }
 
-.btn-delete {
-  background-color: transparent;
-  color: #e53e3e;
-  border: 1px solid #e53e3e;
-  padding: 8px 16px;
-  border-radius: 25px;
-  font-size: 0.9rem;
+/* Estado: Ya inscrito (Verde) */
+.btn-inscribir.disabled-joined {
+  background-color: #28a745 !important;
+  color: white !important;
+  border: 2px solid #28a745 !important;
+  cursor: default;
+  opacity: 1;
+  box-shadow: none;
+}
+
+.btn-leave {
+  padding: 10px 20px;
+  background-color: white;
+  color: #dc3545;
+  font-weight: bold;
+  border: 2px solid #dc3545;
+  border-radius: 25px; /* Consistente con inscribir */
   cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-leave:hover {
+  background-color: #dc3545;
+  color: white;
+}
+
+/* --- Botones Coordinador (Estilo Unificado) --- */
+
+.coord-buttons {
+  display: flex;
+  gap: 15px; /* Espacio entre botones */
+  width: 100%;
+}
+
+/* Clase Base para que sean gemelos */
+.btn-coord {
+  flex: 1; /* Ocupan el mismo ancho */
+  padding: 10px 0; /* Altura consistente */
+  border-radius: 6px; /* Bordes suaves */
+  font-weight: 800;
+  font-size: 0.95rem;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border: 2px solid transparent;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Botón Editar (Amarillo) */
+.btn-edit {
+  background-color: #17a2b8;
+  color: white;
+  border-color: #117a8b;
+}
+
+.btn-edit:hover {
+  background-color: #138496;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Botón Eliminar (Rojo) */
+.btn-delete {
+  background-color: #dc3545;
+  color: white;
+  border-color: #c82333;
+  margin-top: 0 !important; /* Override de estilos viejos */
 }
 
 .btn-delete:hover {
-  background-color: #fff5f5;
+  background-color: #c82333;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 /* --- Sección Derecha (Imagen) --- */
@@ -111,6 +182,7 @@
   width: 40%; /* Ancho fijo para la imagen */
   position: relative;
   min-height: 100%;
+  background-color: #f0f0f0; /* Fondo gris mientras carga */
 }
 
 .right-section .image {
@@ -120,44 +192,14 @@
   display: block;
 }
 
-/* Eliminamos la diagonal antigua para un look más limpio */
-.diagonal {
-  display: none;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .card-container {
-    flex-direction: column-reverse; /* Imagen arriba en móviles */
-  }
-  .right-section {
-    width: 100%;
-    height: 200px;
-  }
-}
-
-.btn-inscribir.disabled-passed {
-  background-color: #555 !important;
-  color: #ccc !important;
-  border: 2px solid #555 !important;
-  cursor: not-allowed !important;
-  opacity: 0.8;
-  pointer-events: none; /* Bloquea el clic físicamente */
-}
-
-/* ESTADO INSCRITO */
-.btn-inscribir.disabled-joined {
-  background-color: #28a745 !important;
-  color: white !important;
-  border: 2px solid #28a745 !important;
-  cursor: default;
-  opacity: 1;
-}
-
-/* Filtros visuales */
+/* Filtros visuales para eventos pasados */
 .card-finished {
   border-color: #999;
   opacity: 0.9;
+}
+
+.card-finished .left-section {
+  background-color: #f4f4f4; /* Gris muy suave, no tan oscuro */
 }
 
 .img-grayscale {
@@ -177,49 +219,24 @@
   border: 4px solid white;
   border-radius: 8px;
   z-index: 10;
+  pointer-events: none;
 }
 
-.btn-leave {
-  padding: 10px 20px;
-  background-color: white;
-  color: #dc3545;
-  font-weight: bold;
-  border: 2px solid #dc3545;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 15px;
-  transition: all 0.2s;
+/* Eliminamos la diagonal antigua */
+.diagonal {
+  display: none;
 }
 
-.btn-leave:hover {
-  background-color: #dc3545;
-  color: white;
-}
-
-.coord-buttons {
-  display: flex;
-  gap: 10px;
-  margin-top: 15px;
-}
-
-.btn-edit {
-  flex: 1;
-  padding: 8px 16px;
-  background-color: #ffc107; /* Amarillo */
-  color: #333;
-  border: 2px solid #e0a800;
-  border-radius: 4px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.btn-edit:hover {
-  background-color: #e0a800;
-}
-
-/* Aseguramos que el botón delete también se ajuste */
-.btn-delete {
-  flex: 1;
-  margin-top: 0 !important; /* Quitar margen superior si está en flex */
+/* Responsive */
+@media (max-width: 768px) {
+  .card-container {
+    flex-direction: column-reverse; /* Imagen arriba en móviles */
+  }
+  .right-section {
+    width: 100%;
+    height: 200px;
+  }
+  .coord-buttons {
+    flex-direction: column; /* Botones apilados en móvil */
+  }
 }

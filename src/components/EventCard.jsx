@@ -13,22 +13,39 @@ export default function EventCard({
   const isParticipating =
     event.participantes && event.participantes.includes(userId);
 
+  // --- FUNCIÓN CORREGIDA PARA VALIDAR FECHAS ---
   const isEventPassed = (dateString, timeString) => {
     if (!dateString) return false;
     const now = new Date();
+    let eventDate;
 
-    const cleanDate = String(dateString).substring(0, 10);
-    const [year, month, day] = cleanDate.split("-").map(Number);
-    const eventDate = new Date(year, month - 1, day);
+    // Caso 1: Formato ISO estándar del backend (YYYY-MM-DD)
+    if (dateString.match(/^\d{4}-\d{2}-\d{2}/)) {
+      const cleanDate = dateString.substring(0, 10);
+      const [year, month, day] = cleanDate.split("-").map(Number);
+      eventDate = new Date(year, month - 1, day);
+    }
+    // Caso 2: Formato Chileno visual (DD-MM-YYYY) - Por si acaso llega así
+    else if (dateString.match(/^\d{2}-\d{2}-\d{4}/)) {
+      const [day, month, year] = dateString.split("-").map(Number);
+      eventDate = new Date(year, month - 1, day);
+    }
+    // Caso 3: Fallback
+    else {
+      eventDate = new Date(dateString);
+    }
 
+    // Ajustar Hora
     if (timeString && timeString.includes(":")) {
       const [hours, minutes] = timeString.split(":").map(Number);
       eventDate.setHours(hours, minutes, 0, 0);
     } else {
-      eventDate.setHours(23, 59, 59);
+      eventDate.setHours(23, 59, 59, 999);
     }
+
     return now > eventDate;
   };
+  // -----------------------------------------------
 
   const hasPassed = isEventPassed(event.date, event.time);
 
@@ -89,14 +106,12 @@ export default function EventCard({
             </>
           )}
 
-          {/* COORDINADOR: BOTONES DE GESTIÓN */}
+          {/* COORDINADOR */}
           {userRole === "Coordinator" && (
             <div className="coord-buttons">
-              {/* Botón Nuevo: EDITAR */}
               <button className="btn-edit" onClick={() => onEdit(event)}>
                 Editar ✏️
               </button>
-
               <button
                 className="btn-delete"
                 onClick={() => onDelete(event._id)}
