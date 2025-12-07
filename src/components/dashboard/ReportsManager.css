@@ -1,0 +1,263 @@
+/* src/components/dashboard/ReportsManager.css */
+
+:root {
+  --blue-deep: #1a3c6d;
+  --blue-soft: #f0f7ff;
+  --blue-vibrant: #2d89ef;
+  --text-dark: #333333;
+  --text-gray: #666666;
+  --white: #ffffff;
+  --card-radius: 16px;
+}
+
+.reports-manager-container {
+  background-color: var(--blue-soft);
+  min-height: 100%;
+  padding: 40px 20px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.reports-title {
+  color: var(--blue-deep);
+  font-family: 'Georgia', serif;
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.reports-subtitle {
+  text-align: center;
+  color: var(--text-gray);
+  margin-bottom: 50px;
+  font-size: 1.1rem;
+}
+
+/* --- MENÚ DE SELECCIÓN --- */
+.reports-menu-grid {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.report-option-card {
+  background: var(--white);
+  padding: 40px 30px;
+  border-radius: var(--card-radius);
+  box-shadow: 0 10px 25px rgba(26, 60, 109, 0.1);
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s;
+  flex: 1;
+  min-width: 280px;
+  max-width: 350px;
+  
+  /* AQUÍ ESTÁ EL CAMBIO: Borde superior azul */
+  border: none;
+  border-top: 6px solid var(--blue-deep); 
+  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.report-option-card:hover {
+  transform: translateY(-10px);
+  /* Al hacer hover, cambiamos el color de la sombra o del fondo sutilmente */
+  box-shadow: 0 15px 35px rgba(26, 60, 109, 0.15);
+}
+
+.report-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  display: block;
+}
+
+.report-option-card h3 {
+  color: var(--blue-deep);
+  font-family: 'Georgia', serif;
+  font-size: 1.5rem;
+  margin: 0 0 10px 0;
+}
+
+.report-option-card p {
+  color: var(--text-gray);
+  line-height: 1.5;
+}
+
+/* --- FORMULARIO DE CONFIGURACIÓN --- */
+.report-config-card {
+  background: var(--white);
+  padding: 40px;
+  border-radius: var(--card-radius);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  max-width: 500px;
+  margin: 0 auto;
+  
+  /* También nos aseguramos que este lo tenga */
+  border-top: 6px solid var(--blue-deep);
+  
+  animation: fadeIn 0.4s ease-out;
+}
+
+.report-config-card h3 {
+  text-align: center;
+  color: var(--blue-deep);
+  font-family: 'Georgia', serif;
+  margin-bottom: 30px;
+}
+
+.report-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text-dark);
+}
+
+.form-control {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  background-color: #f9f9ff;
+}
+
+.form-control:focus {
+  border-color: var(--blue-vibrant);
+  outline: none;
+  background-color: white;
+}
+
+.form-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+}
+
+.btn-generate {
+  flex: 1;
+  background-color: #28a745;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-generate:hover { background-color: #218838; }
+
+.btn-cancel {
+  flex: 1;
+  background-color: transparent;
+  color: #dc3545;
+  border: 1px solid #dc3545;
+  padding: 12px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-cancel:hover { background-color: #fff5f5; }
+
+/* --- RESULTADOS --- */
+.results-section {
+  max-width: 800px;
+  margin: 0 auto;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.results-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  border-bottom: 2px solid #e0e0e0;
+  padding-bottom: 15px;
+}
+
+.results-header h3 {
+  color: var(--blue-deep);
+  font-family: 'Georgia', serif;
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+.btn-new-report {
+  background-color: var(--blue-deep);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 30px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+
+.stat-card {
+  background: var(--white);
+  padding: 40px 20px;
+  border-radius: var(--card-radius);
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  transition: transform 0.3s;
+  
+  /* Borde superior también para las tarjetas de resultados para consistencia */
+  border-top: 6px solid #ccc; /* Color base si no tienen clase específica */
+}
+
+.stat-card:hover {
+  transform: scale(1.03);
+}
+
+/* Colores específicos que sobrescriben el borde */
+.stat-card.green { border-top-color: #28a745; border-bottom: none; }
+.stat-card.yellow { border-top-color: #ffc107; border-bottom: none; }
+
+.stat-number {
+  font-size: 4rem;
+  font-weight: 800;
+  margin: 0 0 10px 0;
+  line-height: 1;
+}
+
+.stat-card.green .stat-number { color: #28a745; }
+.stat-card.yellow .stat-number { color: #ffc107; }
+
+.stat-label {
+  font-size: 1.1rem;
+  color: var(--text-gray);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 600px) {
+  .results-header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+}
