@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
 import { apiRequest } from "../../utils/api";
-import "./DashboardComponents.css"; // Asegúrate de importar los estilos
+import "./RequestsManager.css"; // Importamos el nuevo CSS
 
 export default function RequestsManager({ userRole }) {
   const [requests, setRequests] = useState([]);
-  // Estado del formulario
+  
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -22,7 +22,9 @@ export default function RequestsManager({ userRole }) {
   const loadRequests = async () => {
     try {
       const res = await apiRequest("/api/requests");
-      setRequests(res.data);
+      // Ordenar: Pendientes primero
+      const sorted = res.data.sort((a, b) => (a.status === 'pending' ? -1 : 1));
+      setRequests(sorted);
     } catch (err) {
       console.error(err);
     }
@@ -32,9 +34,8 @@ export default function RequestsManager({ userRole }) {
     e.preventDefault();
     try {
       await apiRequest("/api/requests", "POST", formData);
-      alert("Solicitud enviada correctamente");
+      alert("Solicitud enviada correctamente. Estaremos en contacto.");
 
-      // Si es coordinador, recargamos la lista para ver la nueva
       if (userRole === "Coordinator") loadRequests();
 
       setFormData({
@@ -42,13 +43,14 @@ export default function RequestsManager({ userRole }) {
         description: "",
         beneficiaryName: "",
         beneficiaryAge: "",
-      }); // Limpiar form
+      }); 
     } catch (err) {
       alert(err.message);
     }
   };
 
   const handleResolve = async (id, status) => {
+    if(!confirm(`¿Confirmas cambiar el estado a: ${status === 'approved' ? 'Aprobado' : 'Rechazado'}?`)) return;
     try {
       await apiRequest(`/api/requests/${id}/resolve`, "PATCH", { status });
       loadRequests();
@@ -58,167 +60,120 @@ export default function RequestsManager({ userRole }) {
   };
 
   return (
-    <div className="module-container">
-      <h2>
-        {userRole === "Coordinator"
-          ? "Gestión de Solicitudes"
-          : "Solicitar Ayuda"}
+    <div className="requests-manager-container">
+      <h2 className="requests-title">
+        {userRole === "Coordinator" ? "Gestión de Solicitudes" : "Solicitar Ayuda"}
       </h2>
+      <p className="requests-subtitle">
+        {userRole === "Coordinator" 
+          ? "Revisa y gestiona las necesidades de la comunidad"
+          : "Cuéntanos qué necesitas y cómo podemos apoyarte"}
+      </p>
 
-      {/* LAYOUT DINÁMICO:
-         - Si es Coordinador: Usa "request-layout" (Grilla 2 columnas: Form + Lista)
-         - Si es Voluntario: Usa bloque simple centrado
-      */}
-      <div
-        className={
-          userRole === "Coordinator"
-            ? "request-layout"
-            : "request-single-layout"
-        }
-      >
-        {/* 1. FORMULARIO (Visible para todos) */}
-        <div
-          className="request-form-box"
-          style={
-            userRole === "Volunteer"
-              ? { maxWidth: "600px", margin: "0 auto" }
-              : {}
-          }
-        >
-          <h3>Nueva Solicitud</h3>
-          <p
-            style={{ marginBottom: "15px", color: "#666", fontSize: "0.9rem" }}
-          >
-            Ingresa los datos de la persona que necesita el recurso o apoyo.
+      {/* CONTENEDOR PRINCIPAL: Grid para Coord, Flex para Volunteer */}
+      <div className={userRole === "Coordinator" ? "coordinator-layout" : "volunteer-layout"}>
+        
+        {/* --- COLUMNA 1: FORMULARIO (Siempre visible) --- */}
+        <div className="request-form-card">
+          <h3>📝 Nueva Solicitud</h3>
+          <p className="form-instructions">
+            Ingresa los datos de la persona que requiere el apoyo (silla de ruedas, alimentos, asesoría, etc).
           </p>
-          <form onSubmit={handleSubmit} className="dashboard-form">
+          
+          <form onSubmit={handleSubmit}>
             <input
+              className="req-input"
               placeholder="Título del caso (ej: Silla de ruedas para Juan)"
               value={formData.title}
-              onChange={(e) =>
-                setFormData({ ...formData, title: e.target.value })
-              }
+              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               required
             />
-            <textarea
-              placeholder="Descripción detallada de la necesidad..."
-              value={formData.description}
-              onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
-              }
-              required
-              rows={4}
-            />
-            <div className="row">
+            
+            <div className="req-row">
               <input
+                className="req-input"
                 placeholder="Nombre Beneficiario"
                 value={formData.beneficiaryName}
-                onChange={(e) =>
-                  setFormData({ ...formData, beneficiaryName: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, beneficiaryName: e.target.value })}
                 required
-                style={{ flex: 2 }}
               />
               <input
+                className="req-input"
                 type="number"
                 placeholder="Edad"
+                style={{width: "100px"}}
                 value={formData.beneficiaryAge}
-                onChange={(e) =>
-                  setFormData({ ...formData, beneficiaryAge: e.target.value })
-                }
-                style={{ flex: 1 }}
+                onChange={(e) => setFormData({ ...formData, beneficiaryAge: e.target.value })}
               />
             </div>
-            <button
-              type="submit"
-              className="btn-primary"
-              style={{ marginTop: "10px" }}
-            >
+
+            <textarea
+              className="req-textarea"
+              placeholder="Describe detalladamente la situación y qué se necesita..."
+              rows={5}
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              required
+            />
+            
+            <button type="submit" className="btn-submit">
               Enviar Solicitud
             </button>
           </form>
         </div>
 
-        {/* 2. LISTA DE HISTORIAL (Solo Coordinador) */}
+        {/* --- COLUMNA 2: LISTA (Solo Coordinador) --- */}
         {userRole === "Coordinator" && (
-          <div className="request-list">
-            <h3>Solicitudes Recibidas</h3>
+          <div className="requests-list-column">
+            <h3 className="requests-list-title">Bandeja de Entrada</h3>
+            
             {requests.length === 0 ? (
-              <p>No hay solicitudes registradas.</p>
+              <p style={{textAlign: 'center', color: '#666', fontStyle:'italic'}}>
+                No hay solicitudes registradas.
+              </p>
             ) : (
-              requests.map((req) => (
-                <div
-                  key={req._id}
-                  className={`request-item ${req.status}`}
-                  style={{
-                    marginBottom: "15px",
-                    padding: "15px",
-                    border: "1px solid #ddd",
-                    borderRadius: "8px",
-                    background: "white",
-                  }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      marginBottom: "10px",
-                    }}
-                  >
-                    <h4 style={{ margin: 0 }}>{req.title}</h4>
-                    <span
-                      className={`badge ${req.status}`}
-                      style={{ textTransform: "capitalize" }}
-                    >
-                      {req.status}
-                    </span>
-                  </div>
-                  <p style={{ fontSize: "0.9rem", color: "#555" }}>
-                    {req.description}
-                  </p>
-                  <small
-                    style={{
-                      display: "block",
-                      marginTop: "5px",
-                      color: "#888",
-                    }}
-                  >
-                    Beneficiario: {req.beneficiaryName} ({req.beneficiaryAge}{" "}
-                    años)
-                  </small>
-
-                  {/* Botones de Acción (Solo si está pendiente) */}
-                  {req.status === "pending" && (
-                    <div
-                      className="req-actions"
-                      style={{
-                        marginTop: "10px",
-                        display: "flex",
-                        gap: "10px",
-                      }}
-                    >
-                      <button
-                        onClick={() => handleResolve(req._id, "approved")}
-                        className="btn-success"
-                        style={{ fontSize: "0.8rem" }}
-                      >
-                        Aprobar
-                      </button>
-                      <button
-                        onClick={() => handleResolve(req._id, "rejected")}
-                        className="btn-danger"
-                        style={{ fontSize: "0.8rem" }}
-                      >
-                        Rechazar
-                      </button>
+              <div className="requests-grid">
+                {requests.map((req) => (
+                  <div key={req._id} className={`request-item-card ${req.status}`}>
+                    
+                    <div className="req-header">
+                      <h4 className="req-title">{req.title}</h4>
+                      <span className={`status-pill ${req.status}`}>
+                        {req.status === 'pending' ? 'Pendiente' : 
+                         req.status === 'approved' ? 'Aprobado' : 'Rechazado'}
+                      </span>
                     </div>
-                  )}
-                </div>
-              ))
+
+                    <p className="req-desc">{req.description}</p>
+                    
+                    <div className="req-meta">
+                      <strong>Beneficiario:</strong> {req.beneficiaryName} ({req.beneficiaryAge} años)
+                    </div>
+
+                    {/* Acciones solo si está pendiente */}
+                    {req.status === "pending" && (
+                      <div className="req-actions">
+                        <button
+                          onClick={() => handleResolve(req._id, "approved")}
+                          className="btn-mini btn-approve"
+                        >
+                          ✓ Aprobar
+                        </button>
+                        <button
+                          onClick={() => handleResolve(req._id, "rejected")}
+                          className="btn-mini btn-reject"
+                        >
+                          ✕ Rechazar
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
             )}
           </div>
         )}
+
       </div>
     </div>
   );
