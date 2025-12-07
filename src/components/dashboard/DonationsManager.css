@@ -1,0 +1,229 @@
+/* src/components/dashboard/DonationsManager.css */
+
+:root {
+  --blue-deep: #1a3c6d;
+  --blue-soft: #f0f7ff;
+  --blue-vibrant: #2d89ef;
+  --text-dark: #333333;
+  --text-gray: #666666;
+  --white: #ffffff;
+  --card-radius: 16px;
+}
+
+/* Contenedor Principal */
+.donations-manager-container {
+  background-color: var(--blue-soft);
+  min-height: 100%;
+  padding: 40px 20px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Títulos */
+.donations-title {
+  color: var(--blue-deep);
+  font-family: 'Georgia', serif;
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.donations-subtitle {
+  text-align: center;
+  color: var(--text-gray);
+  margin-bottom: 40px;
+  font-size: 1.1rem;
+}
+
+/* --- PANEL DE CONTROL (Agregar Ítem) --- */
+.inventory-controls-card {
+  background: var(--white);
+  padding: 25px;
+  border-radius: var(--card-radius);
+  box-shadow: 0 8px 20px rgba(26, 60, 109, 0.08);
+  max-width: 800px;
+  margin: 0 auto 40px auto;
+  border-left: 6px solid var(--blue-deep); /* Detalle lateral */
+}
+
+.inventory-controls-card h3 {
+  margin: 0 0 15px 0;
+  color: var(--blue-deep);
+  font-family: 'Georgia', serif;
+}
+
+.controls-form {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.control-input {
+  flex: 1;
+  min-width: 200px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9ff;
+  transition: all 0.3s;
+}
+
+.control-input:focus {
+  border-color: var(--blue-vibrant);
+  background-color: white;
+  outline: none;
+}
+
+.btn-add {
+  background-color: var(--blue-deep);
+  color: white;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-add:hover {
+  background-color: #132f56;
+}
+
+/* --- GRILLA DE INVENTARIO --- */
+.inventory-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Tarjeta de Ítem */
+.donation-item-card {
+  background: var(--white);
+  padding: 25px;
+  border-radius: var(--card-radius);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+  border-top: 5px solid #ccc; /* Gris por defecto */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.3s;
+}
+
+.donation-item-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Colores según estado */
+.donation-item-card.available {
+  border-top-color: #28a745; /* Verde si está disponible */
+}
+
+.donation-item-card.delivered {
+  border-top-color: var(--blue-deep); /* Azul si se entregó */
+  opacity: 0.9;
+  background-color: #f4f6f9;
+}
+
+/* Contenido de la Tarjeta */
+.item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.item-icon {
+  font-size: 2rem;
+}
+
+.item-name {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: var(--text-dark);
+  margin: 5px 0;
+}
+
+.item-type {
+  color: var(--text-gray);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 15px;
+}
+
+/* Badge de Estado */
+.status-badge {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 15px;
+  display: inline-block;
+}
+
+.status-badge.available {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.status-badge.delivered {
+  background-color: #cce5ff;
+  color: #004085;
+}
+
+/* Acción de Entrega */
+.delivery-section {
+  margin-top: auto;
+  padding-top: 15px;
+  border-top: 1px dashed #eee;
+}
+
+.delivery-input-group {
+  display: flex;
+  gap: 5px;
+}
+
+.input-sm {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.btn-confirm {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 0 10px;
+  cursor: pointer;
+  font-size: 1.2rem; /* Checkmark grande */
+}
+
+.btn-deliver-toggle {
+  width: 100%;
+  padding: 8px;
+  background-color: var(--blue-vibrant);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-deliver-toggle:hover {
+  background-color: var(--blue-deep);
+}
+
+/* Mensaje vacío */
+.empty-msg {
+  text-align: center;
+  color: var(--text-gray);
+  font-style: italic;
+  margin-top: 30px;
+}
