@@ -1,124 +1,160 @@
+/* src/components/dashboard/DashboardHome.css */
+
+/* --- Variables y Configuración Base (Idéntico a About) --- */
+:root {
+  --blue-deep: #1a3c6d;
+  --blue-soft: #f0f7ff;
+  --blue-vibrant: #2d89ef;
+  --text-dark: #333333;
+  --text-gray: #666666;
+  --white: #ffffff;
+  --card-radius: 16px;
+}
+
 .dash-home-container {
+  background-color: var(--blue-soft);
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: var(--text-dark);
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  padding: 20px 0;
+}
+
+/* --- HERO SECTION (Estilo About) --- */
+.dash-hero {
+  position: relative;
+  height: 350px;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--blue-deep);
+  margin-bottom: -40px; /* Para que el contenido suba un poco sobre la foto */
+}
+
+.dash-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.4; /* Ajustado para legibilidad */
+  filter: sepia(20%) hue-rotate(190deg); /* El filtro azulado de About */
+}
+
+.dash-hero-content {
+  position: absolute;
   text-align: center;
-  font-family: "Segoe UI", sans-serif;
-}
-
-.dash-intro {
-  margin-bottom: 30px;
-}
-
-.org-subtitle {
-  font-size: 1.2rem;
-  color: #555;
-  margin-bottom: 0;
-  text-transform: uppercase;
-  letter-spacing: 2px;
+  z-index: 2;
+  padding: 20px;
 }
 
 .org-title {
-  font-size: 3rem;
-  line-height: 1.1;
-  color: #000;
-  margin: 10px 0 20px 0;
-  font-weight: 900;
+  font-family: 'Georgia', serif;
+  font-size: 3.5rem;
+  color: var(--white);
+  margin: 0;
+  text-shadow: 0 4px 6px rgba(0,0,0,0.3);
 }
 
-.org-quote-container {
-  display: inline-block;
-  background-color: #fffacd;
-  padding: 5px 20px;
-  transform: rotate(-1deg);
-  margin-bottom: 20px;
+.org-subtitle {
+  color: #e0e0e0;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  display: block;
 }
 
 .org-quote {
-  font-size: 1.2rem;
-  color: #333;
+  font-weight: 300;
+  color: #e0e0e0;
+  font-size: 1.3rem;
+  margin-top: 15px;
   font-style: italic;
-  margin: 0;
 }
 
-.profile-shortcut-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-}
-
-.profile-card-wide {
+/* --- CONTENEDOR PRINCIPAL --- */
+.dashboard-actions-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 3; /* Sobre la foto */
+  padding: 0 20px 60px 20px;
   width: 100%;
-  max-width: 500px;
-  height: auto;
-  flex-direction: row !important;
-  gap: 20px;
-  background-color: #f0f8ff !important;
-  border-color: #0066cc !important;
 }
 
-.card-subtitle {
-  font-size: 0.9rem;
-  color: #666;
-  margin: 0;
-  font-weight: normal;
-}
-
-.divider-line {
-  height: 2px;
-  background-color: #eee;
-  width: 80%;
-  margin: 0 auto 30px auto;
-}
-
-/* --- GRILLA NORMAL --- */
-.quick-actions-grid {
+/* --- ESTRUCTURA DE FILAS (Layout 3-2) --- */
+.buttons-row {
   display: flex;
-  justify-content: center;
   gap: 30px;
-  flex-wrap: wrap;
+  width: 100%;
+  margin-bottom: 30px;
 }
 
+/* Fila Superior: Espacio entre los 3 botones */
+.top-row {
+  justify-content: space-between;
+}
+
+/* Fila Inferior: Centrar los 2 botones */
+.bottom-row {
+  justify-content: center;
+}
+
+/* --- TARJETAS DE ACCIÓN (Estilo Sentiment Card de About) --- */
 .action-card {
-  background: white;
-  border: 3px solid #000;
-  border-radius: 0;
-  padding: 20px;
-  width: 220px;
-  min-height: 130px;
+  background: var(--white);
+  padding: 30px 20px;
+  border-radius: var(--card-radius);
+  box-shadow: 0 10px 20px rgba(26, 60, 109, 0.1);
+  border: none;
+  border-top: 6px solid var(--blue-deep); /* La línea azul superior característica */
+  text-align: center;
+  transition: transform 0.3s ease, background-color 0.3s;
+  cursor: pointer;
+  
+  /* Flexbox para centrar contenido */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  box-shadow: 5px 5px 0px rgba(0, 0, 0, 0.2);
+  
+  /* Tamaño */
+  flex: 1; /* Ocupan espacio equitativo */
+  min-width: 200px; /* Para que no se aplasten mucho */
+  min-height: 180px;
 }
 
 .action-card:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 7px 7px 0px rgba(0, 0, 0, 0.2);
-  background-color: #f8f9fa;
-}
-
-.card-title {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: #333;
-  margin-bottom: 5px;
+  transform: translateY(-5px);
+  background-color: #fafbff;
 }
 
 .card-icon {
-  font-size: 2rem;
-  margin-top: 5px;
+  font-size: 3rem;
+  margin-bottom: 15px;
+  display: block;
 }
 
-.dash-slider-section {
-  width: 100%;
-  max-width: 1000px;
-  margin: 0 auto;
-  border: 2px solid #333;
-  padding: 10px;
-  background: white;
+.card-title {
+  color: var(--blue-deep);
+  font-family: 'Georgia', serif;
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 768px) {
+  .org-title {
+    font-size: 2.2rem;
+  }
+  
+  .buttons-row {
+    flex-direction: column; /* En móvil, uno debajo de otro */
+    gap: 20px;
+  }
+  
+  .action-card {
+    width: 100%;
+  }
 }

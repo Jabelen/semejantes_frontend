@@ -1,12 +1,16 @@
 /* src/pages/Base.css */
 
 :root {
+  --blue-deep: #1a3c6d;
   --blue-soft: #f0f7ff;
+  --blue-vibrant: #2d89ef;
+  --white: #ffffff;
+  --text-dark: #333;
 }
 
 #outer-container {
   height: 100vh;
-  background-color: var(--blue-soft);
+  background-color: var(--blue-soft); /* Fondo unificado */
   font-family: 'Segoe UI', sans-serif;
   overflow: hidden;
 }
@@ -19,12 +23,8 @@
 }
 
 .dashboard-content {
-  padding: 40px 20px;
-  max-width: 1200px;
+  padding: 0 0 40px 0; /* Quitamos padding superior para que el Hero toque el borde */
+  max-width: 100%;     /* Ancho completo para el Hero */
   margin: 0 auto;
   min-height: 85vh;
 }
-
-/* NOTA: Ya no hay estilos para .bm-item aquí. 
-   Todo el estilo del menú viene exclusivamente de BurgerMenu.css 
-   para asegurar consistencia total. */
