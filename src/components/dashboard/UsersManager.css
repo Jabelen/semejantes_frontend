@@ -1,0 +1,166 @@
+/* src/components/dashboard/UsersManager.css */
+
+:root {
+  --blue-deep: #1a3c6d;
+  --blue-soft: #f0f7ff;
+  --blue-vibrant: #2d89ef;
+  --text-dark: #333333;
+  --text-gray: #666666;
+  --white: #ffffff;
+  --card-radius: 16px;
+}
+
+/* Contenedor Principal */
+.users-manager-container {
+  background-color: var(--blue-soft);
+  min-height: 100%;
+  padding: 40px 20px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Encabezados */
+.users-title {
+  color: var(--blue-deep);
+  font-family: 'Georgia', serif;
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.users-subtitle {
+  text-align: center;
+  color: var(--text-gray);
+  margin-bottom: 40px;
+  font-size: 1.1rem;
+}
+
+/* --- GRILLA DE USUARIOS --- */
+.users-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 30px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* Tarjeta de Usuario */
+.user-card {
+  background: var(--white);
+  padding: 30px;
+  border-radius: var(--card-radius);
+  box-shadow: 0 10px 20px rgba(26, 60, 109, 0.08);
+  border: none;
+  border-top: 6px solid var(--blue-deep); /* Línea azul superior para consistencia */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+}
+
+.user-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(26, 60, 109, 0.15);
+}
+
+/* Avatar Visual (Círculo con iniciales) */
+.user-avatar-circle {
+  width: 80px;
+  height: 80px;
+  background-color: var(--blue-soft);
+  color: var(--blue-deep);
+  border: 2px solid var(--blue-vibrant);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  font-family: 'Georgia', serif;
+}
+
+/* Información del Usuario */
+.user-name {
+  color: var(--blue-deep);
+  font-family: 'Georgia', serif;
+  font-size: 1.4rem;
+  margin: 0 0 5px 0;
+  font-weight: bold;
+}
+
+.user-email {
+  color: var(--text-gray);
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+}
+
+.user-role-badge {
+  display: inline-block;
+  padding: 5px 12px;
+  background-color: #e3f2fd;
+  color: var(--blue-deep);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 25px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Acciones (Botones) */
+.user-actions {
+  display: flex;
+  width: 100%;
+  gap: 15px;
+  margin-top: auto; /* Empuja los botones al fondo si la tarjeta crece */
+}
+
+.btn-user-action {
+  flex: 1;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+  border: none;
+}
+
+.btn-approve {
+  background-color: #28a745;
+  color: white;
+  box-shadow: 0 4px 6px rgba(40, 167, 69, 0.2);
+}
+
+.btn-approve:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+.btn-reject {
+  background-color: white;
+  color: #dc3545;
+  border: 1px solid #dc3545;
+}
+
+.btn-reject:hover {
+  background-color: #fff5f5;
+  color: #a71d2a;
+}
+
+/* Estado vacío */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-gray);
+}
+
+.empty-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  display: block;
+  opacity: 0.5;
+}
