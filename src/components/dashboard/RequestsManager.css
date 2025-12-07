@@ -1,0 +1,227 @@
+/* src/components/dashboard/RequestsManager.css */
+
+:root {
+  --blue-deep: #1a3c6d;
+  --blue-soft: #f0f7ff;
+  --blue-vibrant: #2d89ef;
+  --text-dark: #333333;
+  --text-gray: #666666;
+  --white: #ffffff;
+  --card-radius: 16px;
+}
+
+/* Contenedor Principal */
+.requests-manager-container {
+  background-color: var(--blue-soft);
+  min-height: 100%;
+  padding: 40px 20px;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Encabezados */
+.requests-title {
+  color: var(--blue-deep);
+  font-family: 'Georgia', serif;
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 10px;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.requests-subtitle {
+  text-align: center;
+  color: var(--text-gray);
+  margin-bottom: 40px;
+  font-size: 1.1rem;
+}
+
+/* --- LAYOUTS --- */
+/* Layout para Coordinador (2 Columnas en escritorio) */
+.coordinator-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr; /* Formulario más angosto, lista más ancha */
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Layout para Voluntario (Centrado) */
+.volunteer-layout {
+  display: flex;
+  justify-content: center;
+}
+
+/* --- TARJETA DE FORMULARIO --- */
+.request-form-card {
+  background: var(--white);
+  padding: 30px;
+  border-radius: var(--card-radius);
+  box-shadow: 0 10px 25px rgba(26, 60, 109, 0.1);
+  border-top: 6px solid var(--blue-deep);
+  height: fit-content; /* Se ajusta al contenido */
+}
+
+.volunteer-layout .request-form-card {
+  width: 100%;
+  max-width: 600px;
+}
+
+.request-form-card h3 {
+  margin-top: 0;
+  color: var(--blue-deep);
+  font-family: 'Georgia', serif;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+}
+
+.form-instructions {
+  font-size: 0.95rem;
+  color: var(--text-gray);
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+/* Inputs del Formulario */
+.req-input, .req-textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9ff;
+  transition: all 0.3s;
+  font-family: inherit;
+}
+
+.req-input:focus, .req-textarea:focus {
+  border-color: var(--blue-vibrant);
+  background-color: white;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(45, 137, 239, 0.1);
+}
+
+.req-row {
+  display: flex;
+  gap: 15px;
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--blue-vibrant);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+  margin-top: 10px;
+}
+
+.btn-submit:hover {
+  background-color: var(--blue-deep);
+}
+
+/* --- LISTA DE SOLICITUDES (GRID) --- */
+.requests-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.requests-list-title {
+  color: var(--blue-deep);
+  font-family: 'Georgia', serif;
+  margin-bottom: 20px;
+}
+
+/* Tarjeta Individual de Solicitud */
+.request-item-card {
+  background: var(--white);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  border-left: 5px solid #ccc; /* Color por defecto */
+  transition: transform 0.2s;
+}
+
+.request-item-card:hover {
+  transform: translateX(5px);
+}
+
+/* Bordes por estado */
+.request-item-card.pending { border-left-color: #ffc107; } /* Amarillo */
+.request-item-card.approved { border-left-color: #28a745; } /* Verde */
+.request-item-card.rejected { border-left-color: #dc3545; } /* Rojo */
+
+.req-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.req-title {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+/* Badge de Estado */
+.status-pill {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.status-pill.pending { background-color: #fff3cd; color: #856404; }
+.status-pill.approved { background-color: #d4edda; color: #155724; }
+.status-pill.rejected { background-color: #f8d7da; color: #721c24; }
+
+.req-desc {
+  color: var(--text-gray);
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+
+.req-meta {
+  font-size: 0.85rem;
+  color: #888;
+  border-top: 1px dashed #eee;
+  padding-top: 8px;
+}
+
+/* Acciones (Botones aprobar/rechazar) */
+.req-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.btn-mini {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-mini:hover { opacity: 0.8; }
+
+.btn-approve { background-color: #28a745; color: white; }
+.btn-reject { background-color: #dc3545; color: white; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .coordinator-layout {
+    grid-template-columns: 1fr; /* Una columna en móvil */
+  }
+}
