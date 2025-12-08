@@ -1,19 +1,21 @@
 import { useState, useEffect } from "react";
 import { apiRequest } from "../../utils/api";
-import "./RequestsManager.css"; // Importamos el nuevo CSS
+import "./RequestsManager.css";
 
 export default function RequestsManager({ userRole }) {
   const [requests, setRequests] = useState([]);
   
+  // 1. Agregamos los nuevos campos al estado inicial
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     beneficiaryName: "",
     beneficiaryAge: "",
+    contactPhone: "", // Nuevo
+    contactEmail: "", // Nuevo
   });
 
   useEffect(() => {
-    // Solo cargamos la lista si es Coordinador
     if (userRole === "Coordinator") {
       loadRequests();
     }
@@ -22,7 +24,6 @@ export default function RequestsManager({ userRole }) {
   const loadRequests = async () => {
     try {
       const res = await apiRequest("/api/requests");
-      // Ordenar: Pendientes primero
       const sorted = res.data.sort((a, b) => (a.status === 'pending' ? -1 : 1));
       setRequests(sorted);
     } catch (err) {
@@ -38,11 +39,14 @@ export default function RequestsManager({ userRole }) {
 
       if (userRole === "Coordinator") loadRequests();
 
+      // 2. Reseteamos también los nuevos campos
       setFormData({
         title: "",
         description: "",
         beneficiaryName: "",
         beneficiaryAge: "",
+        contactPhone: "",
+        contactEmail: "",
       }); 
     } catch (err) {
       alert(err.message);
@@ -70,17 +74,17 @@ export default function RequestsManager({ userRole }) {
           : "Cuéntanos qué necesitas y cómo podemos apoyarte"}
       </p>
 
-      {/* CONTENEDOR PRINCIPAL: Grid para Coord, Flex para Volunteer */}
       <div className={userRole === "Coordinator" ? "coordinator-layout" : "volunteer-layout"}>
         
-        {/* --- COLUMNA 1: FORMULARIO (Siempre visible) --- */}
+        {/* --- COLUMNA 1: FORMULARIO --- */}
         <div className="request-form-card">
           <h3>📝 Nueva Solicitud</h3>
           <p className="form-instructions">
-            Ingresa los datos de la persona que requiere el apoyo (silla de ruedas, alimentos, asesoría, etc).
+            Ingresa los datos de la persona que requiere el apoyo y su contacto.
           </p>
           
           <form onSubmit={handleSubmit}>
+            {/* Título */}
             <input
               className="req-input"
               placeholder="Título del caso (ej: Silla de ruedas para Juan)"
@@ -89,6 +93,7 @@ export default function RequestsManager({ userRole }) {
               required
             />
             
+            {/* Fila 1: Beneficiario y Edad */}
             <div className="req-row">
               <input
                 className="req-input"
@@ -107,6 +112,27 @@ export default function RequestsManager({ userRole }) {
               />
             </div>
 
+            {/* Fila 2 (NUEVA): Teléfono y Correo */}
+            <div className="req-row">
+              <input
+                className="req-input"
+                type="tel"
+                placeholder="Teléfono (+569...)"
+                value={formData.contactPhone}
+                onChange={(e) => setFormData({ ...formData, contactPhone: e.target.value })}
+                required
+              />
+              <input
+                className="req-input"
+                type="email"
+                placeholder="Correo de contacto"
+                value={formData.contactEmail}
+                onChange={(e) => setFormData({ ...formData, contactEmail: e.target.value })}
+                required
+              />
+            </div>
+
+            {/* Descripción */}
             <textarea
               className="req-textarea"
               placeholder="Describe detalladamente la situación y qué se necesita..."
@@ -148,9 +174,14 @@ export default function RequestsManager({ userRole }) {
                     
                     <div className="req-meta">
                       <strong>Beneficiario:</strong> {req.beneficiaryName} ({req.beneficiaryAge} años)
+                      {/* Opcional: Mostrar contacto en la tarjeta del coordinador si el backend lo devuelve */}
+                      {(req.contactPhone || req.contactEmail) && (
+                        <div style={{marginTop: '5px', fontSize: '0.8rem'}}>
+                          📞 {req.contactPhone} | 📧 {req.contactEmail}
+                        </div>
+                      )}
                     </div>
 
-                    {/* Acciones solo si está pendiente */}
                     {req.status === "pending" && (
                       <div className="req-actions">
                         <button
