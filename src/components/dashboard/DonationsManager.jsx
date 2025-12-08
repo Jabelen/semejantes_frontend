@@ -1,11 +1,24 @@
 import { useState, useEffect } from "react";
 import { apiRequest } from "../../utils/api";
-import "./DonationsManager.css"; // Importar el nuevo CSS
+import "./DonationsManager.css";
 
 export default function DonationsManager({ userRole }) {
   const [items, setItems] = useState([]);
-  const [newItem, setNewItem] = useState({ itemName: "", type: "" });
-  const [delivery, setDelivery] = useState({ id: null, deliveredTo: "" });
+
+  const [newItem, setNewItem] = useState({
+    itemName: "",
+    type: "",
+    donorName: "",
+    donorRut: "",
+    donorPhone: "",
+  });
+
+  const [delivery, setDelivery] = useState({
+    id: null,
+    beneficiaryName: "",
+    beneficiaryRut: "",
+    beneficiaryPhone: "",
+  });
 
   useEffect(() => {
     loadItems();
@@ -14,8 +27,9 @@ export default function DonationsManager({ userRole }) {
   const loadItems = async () => {
     try {
       const res = await apiRequest("/api/donations");
-      // Ordenar: Disponibles primero
-      const sorted = res.data.sort((a, b) => Number(b.available) - Number(a.available));
+      const sorted = res.data.sort(
+        (a, b) => Number(b.available) - Number(a.available)
+      );
       setItems(sorted);
     } catch (err) {
       console.error(err);
@@ -23,60 +37,127 @@ export default function DonationsManager({ userRole }) {
   };
 
   const handleCreate = async (e) => {
-    e.preventDefault(); // Prevenir recarga si está en form
-    if (!newItem.itemName || !newItem.type) return;
-    
+    e.preventDefault();
+    if (!newItem.itemName || !newItem.type || !newItem.donorName) {
+      alert(
+        "Por favor completa los campos obligatorios (Ítem, Tipo y Nombre Donante)"
+      );
+      return;
+    }
+
     try {
       await apiRequest("/api/donations", "POST", newItem);
       loadItems();
-      setNewItem({ itemName: "", type: "" });
+      setNewItem({
+        itemName: "",
+        type: "",
+        donorName: "",
+        donorRut: "",
+        donorPhone: "",
+      });
     } catch (err) {
       alert(err.message);
     }
   };
 
   const handleDeliver = async () => {
-    if (!delivery.deliveredTo) return;
+    if (!delivery.beneficiaryName) {
+      alert("El nombre del beneficiario es obligatorio");
+      return;
+    }
+
     try {
-      await apiRequest(`/api/donations/${delivery.id}`, "PUT", {
-        deliveredTo: delivery.deliveredTo,
-      });
+      const { id, ...dataToSend } = delivery;
+      await apiRequest(`/api/donations/${id}`, "PUT", dataToSend);
       loadItems();
-      setDelivery({ id: null, deliveredTo: "" });
+      setDelivery({
+        id: null,
+        beneficiaryName: "",
+        beneficiaryRut: "",
+        beneficiaryPhone: "",
+      });
     } catch (err) {
-      alert(err.message);
+      alert("Error al entregar: " + err.message);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (
+      !confirm(
+        "¿Estás seguro de eliminar esta donación? Esta acción no se puede deshacer."
+      )
+    )
+      return;
+    try {
+      await apiRequest(`/api/donations/${id}`, "DELETE");
+      loadItems();
+    } catch (err) {
+      alert("Error al eliminar: " + err.message);
     }
   };
 
   return (
     <div className="donations-manager-container">
       <h2 className="donations-title">Inventario y Donaciones</h2>
-      <p className="donations-subtitle">Gestiona los recursos disponibles para la comunidad</p>
+      <p className="donations-subtitle">
+        Gestiona los recursos disponibles para la comunidad
+      </p>
 
       {/* --- PANEL DE CONTROL (Solo Coordinador) --- */}
       {userRole === "Coordinator" && (
         <div className="inventory-controls-card">
-          <h3>➕ Agregar Nuevo Ítem</h3>
+          <h3>➕ Agregar Nueva Donación</h3>
           <form className="controls-form" onSubmit={handleCreate}>
-            <input
-              className="control-input"
-              placeholder="Nombre del ítem (Ej: Silla de Ruedas #4)"
-              value={newItem.itemName}
-              onChange={(e) =>
-                setNewItem({ ...newItem, itemName: e.target.value })
-              }
-              required
-            />
-            <input
-              className="control-input"
-              placeholder="Tipo (Ej: Movilidad, Alimento)"
-              value={newItem.type}
-              onChange={(e) => setNewItem({ ...newItem, type: e.target.value })}
-              required
-            />
-            <button type="submit" className="btn-add">
-              Agregar
-            </button>
+            <div className="form-row">
+              <input
+                className="control-input"
+                placeholder="Nombre del ítem (Ej: Silla de Ruedas)*"
+                value={newItem.itemName}
+                onChange={(e) =>
+                  setNewItem({ ...newItem, itemName: e.target.value })
+                }
+                required
+              />
+              <input
+                className="control-input"
+                placeholder="Tipo (Ej: Movilidad)*"
+                value={newItem.type}
+                onChange={(e) =>
+                  setNewItem({ ...newItem, type: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div className="form-row">
+              <input
+                className="control-input"
+                placeholder="Nombre Donante*"
+                value={newItem.donorName}
+                onChange={(e) =>
+                  setNewItem({ ...newItem, donorName: e.target.value })
+                }
+                required
+              />
+              <input
+                className="control-input"
+                placeholder="RUT Donante"
+                value={newItem.donorRut}
+                onChange={(e) =>
+                  setNewItem({ ...newItem, donorRut: e.target.value })
+                }
+              />
+              <input
+                className="control-input"
+                placeholder="Teléfono Donante"
+                value={newItem.donorPhone}
+                onChange={(e) =>
+                  setNewItem({ ...newItem, donorPhone: e.target.value })
+                }
+              />
+              <button type="submit" className="btn-add">
+                Agregar
+              </button>
+            </div>
           </form>
         </div>
       )}
@@ -87,65 +168,177 @@ export default function DonationsManager({ userRole }) {
       ) : (
         <div className="inventory-grid">
           {items.map((item) => (
-            <div 
-              key={item._id} 
-              className={`donation-item-card ${item.available ? 'available' : 'delivered'}`}
+            <div
+              key={item._id}
+              className={`donation-item-card ${
+                item.available ? "available" : "delivered"
+              }`}
             >
               <div className="card-main-content">
                 <div className="item-header">
                   <span className="item-icon">
-                    {item.type.toLowerCase().includes("silla") ? "🦽" : 
-                     item.type.toLowerCase().includes("alimento") ? "🥫" : "🎁"}
+                    {item.type.toLowerCase().includes("silla")
+                      ? "🦽"
+                      : item.type.toLowerCase().includes("alimento")
+                      ? "🥫"
+                      : "🎁"}
                   </span>
-                  <span className={`status-badge ${item.available ? 'available' : 'delivered'}`}>
+                  <span
+                    className={`status-badge ${
+                      item.available ? "available" : "delivered"
+                    }`}
+                  >
                     {item.available ? "Disponible" : "Entregado"}
                   </span>
                 </div>
-                
+
                 <h4 className="item-name">{item.itemName}</h4>
                 <div className="item-type">{item.type}</div>
 
+                {/* --- NUEVA SECCIÓN DE DATOS DEL DONANTE --- */}
+                {item.donorName && (
+                  <div className="donor-info-block">
+                    <span className="item-donor">
+                      Donado por: {item.donorName}
+                    </span>
+                    {/* Mostrar detalles de contacto SOLO al coordinador */}
+                    {userRole === "Coordinator" &&
+                      (item.donorRut || item.donorPhone) && (
+                        <div className="donor-details-text">
+                          {item.donorRut && (
+                            <span>RUT: {item.donorRut} • </span>
+                          )}
+                          {item.donorPhone && (
+                            <span>Tel: {item.donorPhone}</span>
+                          )}
+                        </div>
+                      )}
+                  </div>
+                )}
+
+                {/* DETALLES DEL BENEFICIARIO (Cuando ya no está disponible) */}
                 {!item.available && (
-                  <div style={{ fontSize: "0.9rem", color: "#555", marginTop: "10px" }}>
-                    <strong>Entregado a:</strong> <br/> {item.deliveredTo}
+                  <div className="beneficiary-details-box">
+                    <strong style={{ color: "#1a3c6d" }}>Entregado a:</strong>
+                    <div className="beneficiary-name">
+                      {item.beneficiaryName || item.deliveredTo || "Sin nombre"}
+                    </div>
+                    {(item.beneficiaryRut || item.beneficiaryPhone) && (
+                      <div className="beneficiary-contact">
+                        {item.beneficiaryRut && (
+                          <span>
+                            RUT: {item.beneficiaryRut}
+                            <br />
+                          </span>
+                        )}
+                        {item.beneficiaryPhone && (
+                          <span>Tel: {item.beneficiaryPhone}</span>
+                        )}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
 
-              {/* Sección de Acción (Solo Coordinador y si está disponible) */}
-              {userRole === "Coordinator" && item.available && (
+              {/* SECCIÓN DE ACCIONES (Coordinador) */}
+              {userRole === "Coordinator" && (
                 <div className="delivery-section">
-                  {delivery.id === item._id ? (
-                    <div className="delivery-input-group">
-                      <input
-                        className="input-sm"
-                        placeholder="Nombre Beneficiario"
-                        autoFocus
-                        value={delivery.deliveredTo}
-                        onChange={(e) =>
-                          setDelivery({
-                            ...delivery,
-                            deliveredTo: e.target.value,
-                          })
-                        }
-                      />
-                      <button className="btn-confirm" onClick={handleDeliver}>
-                        ✓
-                      </button>
-                      <button 
-                        className="btn-confirm" 
-                        style={{background: "#dc3545"}}
-                        onClick={() => setDelivery({ id: null, deliveredTo: "" })}
-                      >
-                        ✕
-                      </button>
-                    </div>
+                  {item.available ? (
+                    delivery.id === item._id ? (
+                      <div className="delivery-form-stack">
+                        <input
+                          className="input-sm"
+                          placeholder="Nombre Beneficiario*"
+                          autoFocus
+                          value={delivery.beneficiaryName}
+                          onChange={(e) =>
+                            setDelivery({
+                              ...delivery,
+                              beneficiaryName: e.target.value,
+                            })
+                          }
+                        />
+                        <div className="delivery-row">
+                          <input
+                            className="input-sm"
+                            placeholder="RUT"
+                            value={delivery.beneficiaryRut}
+                            onChange={(e) =>
+                              setDelivery({
+                                ...delivery,
+                                beneficiaryRut: e.target.value,
+                              })
+                            }
+                          />
+                          <input
+                            className="input-sm"
+                            placeholder="Teléfono"
+                            value={delivery.beneficiaryPhone}
+                            onChange={(e) =>
+                              setDelivery({
+                                ...delivery,
+                                beneficiaryPhone: e.target.value,
+                              })
+                            }
+                          />
+                        </div>
+
+                        <div className="delivery-actions">
+                          <button
+                            className="btn-confirm"
+                            onClick={handleDeliver}
+                            style={{ flex: 1 }}
+                          >
+                            Confirmar
+                          </button>
+                          <button
+                            className="btn-cancel"
+                            style={{ width: "40px" }}
+                            onClick={() =>
+                              setDelivery({
+                                id: null,
+                                beneficiaryName: "",
+                                beneficiaryRut: "",
+                                beneficiaryPhone: "",
+                              })
+                            }
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div style={{ display: "flex", gap: "10px" }}>
+                        <button
+                          onClick={() =>
+                            setDelivery({
+                              id: item._id,
+                              beneficiaryName: "",
+                              beneficiaryRut: "",
+                              beneficiaryPhone: "",
+                            })
+                          }
+                          className="btn-deliver-toggle"
+                          style={{ flex: 1 }}
+                        >
+                          Entregar
+                        </button>
+                        <button
+                          onClick={() => handleDelete(item._id)}
+                          className="btn-cancel"
+                          title="Eliminar Donación"
+                        >
+                          🗑️
+                        </button>
+                      </div>
+                    )
                   ) : (
                     <button
-                      onClick={() => setDelivery({ id: item._id, deliveredTo: "" })}
-                      className="btn-deliver-toggle"
+                      onClick={() => handleDelete(item._id)}
+                      className="btn-cancel"
+                      style={{ width: "100%", marginTop: "10px" }}
                     >
-                      Registrar Entrega
+                      Eliminar Registro
                     </button>
                   )}
                 </div>
