@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router";
+import { useNotification } from "../context/NotificationContext";
 import "./Login.css";
 import Header from "../components/Header";
 
@@ -7,6 +8,7 @@ import Header from "../components/Header";
 import loginBg from "../assets/foto1.jpeg";
 
 const Login = () => {
+  const { addNotification } = useNotification();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -34,18 +36,18 @@ const Login = () => {
       const data = await response.json();
 
       if (!response.ok) {
-        alert(data.message || "Error al iniciar sesión");
+        addNotification(data.message || "Error al iniciar sesión", "error");
         return;
       }
 
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
-      alert("¡Bienvenido a casa!"); // Mensaje más cálido
+      addNotification("¡Bienvenido a casa!", "success");
       navigate("/base", { replace: true });
     } catch (error) {
       console.error("Error de conexión:", error);
-      alert("No se pudo conectar con el servidor. Revisa tu conexión.");
+      addNotification("No se pudo conectar con el servidor. Revisa tu conexión.", "error");
     }
   };
 

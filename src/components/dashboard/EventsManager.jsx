@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import { apiRequest } from "../../utils/api";
 import { formatChileDate } from "../../utils/dateHelper";
+import { useNotification } from "../../context/NotificationContext";
+import ConfirmModal from "../../components/ConfirmModal";
 import "./DashboardComponents.css";
 
 export default function EventsManager({ userRole }) {
+  const { addNotification } = useNotification();
   const [events, setEvents] = useState([]);
   const [showForm, setShowForm] = useState(false);
-
-  // Estado para saber si estamos editando (null = creando)
   const [editingId, setEditingId] = useState(null);
 
   const [formData, setFormData] = useState({
@@ -21,6 +22,9 @@ export default function EventsManager({ userRole }) {
   });
   const [file, setFile] = useState(null);
 
+  const [modalOpen, setModalOpen] = useState(false);
+  const [eventToDelete, setEventToDelete] = useState(null);
+
   useEffect(() => {
     loadEvents();
   }, []);
@@ -28,7 +32,6 @@ export default function EventsManager({ userRole }) {
   const loadEvents = async () => {
     try {
       const res = await apiRequest("/api/events");
-      // Ordenar por fecha (Futuro -> Pasado)
       const sorted = res.data.sort(
         (a, b) => new Date(b.date) - new Date(a.date)
       );
@@ -38,9 +41,8 @@ export default function EventsManager({ userRole }) {
     }
   };
 
-  // Preparar formulario para EDITAR
   const handleEditClick = (event) => {
-    setEditingId(event._id); // Guardamos ID
+    setEditingId(event._id);
     setFormData({
       title: event.title,
       description: event.description,
@@ -50,13 +52,11 @@ export default function EventsManager({ userRole }) {
       place: event.place,
       requirements: event.requirements || "",
     });
-    setFile(null); // Reseteamos archivo (opcional cambiarlo)
-    setShowForm(true); // Abrimos el formulario
-    // Scroll hacia el formulario suavemente
+    setFile(null);
+    setShowForm(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Preparar formulario para CREAR (Limpiar)
   const handleNewClick = () => {
     setEditingId(null);
     setFormData({
@@ -80,42 +80,64 @@ export default function EventsManager({ userRole }) {
 
     try {
       if (editingId) {
-        // MODO EDICIÓN (PUT)
         await apiRequest(`/api/events/${editingId}`, "PUT", data, true);
-        alert("Evento actualizado correctamente");
+        addNotification("Evento actualizado correctamente", "success");
       } else {
-        // MODO CREACIÓN (POST)
         await apiRequest("/api/events", "POST", data, true);
-        alert("Evento creado correctamente");
+        addNotification("Evento creado correctamente", "success");
       }
 
       setShowForm(false);
       setEditingId(null);
       loadEvents();
     } catch (err) {
-      alert(err.message);
+      addNotification(err.message, "error");
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!confirm("¿Borrar este evento?")) return;
+  const handleDeleteClick = (id) => {
+    setEventToDelete(id);
+    setModalOpen(true);
+  };
+
+  const executeDelete = async () => {
+    if (!eventToDelete) return;
     try {
-      await apiRequest(`/api/events/${id}`, "DELETE");
+      await apiRequest(`/api/events/${eventToDelete}`, "DELETE");
+      addNotification("Evento eliminado correctamente", "success");
       loadEvents();
     } catch (err) {
-      alert(err.message);
+      addNotification(err.message, "error");
+    } finally {
+      setModalOpen(false);
+      setEventToDelete(null);
     }
   };
 
   return (
     <div className="module-container">
-      <h2>Gestión de Eventos</h2>
+      <ConfirmModal 
+        isOpen={modalOpen} 
+        onClose={() => setModalOpen(false)} 
+        onConfirm={executeDelete}
+        title="Eliminar Evento"
+        message="¿Estás seguro de que deseas eliminar este evento permanentemente? Esta acción no se puede deshacer."
+      />
 
-      {userRole === "Coordinator" && (
-        <button className="btn-primary" onClick={handleNewClick}>
-          {showForm && !editingId ? "Cancelar" : "+ Nuevo Evento"}
-        </button>
-      )}
+      {/* --- HEADER CORREGIDO: Bloque estándar alineado a la izquierda --- */}
+      <div style={{ textAlign: "left", marginBottom: "20px" }}>
+        <h2 style={{ margin: "0 0 10px 0", padding: "0" }}>Gestión de Eventos</h2>
+        {userRole === "Coordinator" && (
+          <button 
+            className="btn-primary" 
+            onClick={handleNewClick}
+            style={{ marginLeft: "0" }} // Forzamos margen izquierdo 0
+          >
+            {showForm && !editingId ? "Cancelar" : "+ Nuevo Evento"}
+          </button>
+        )}
+      </div>
+      {/* ------------------------------------------------------------------ */}
 
       {showForm && (
         <div className="form-container">
@@ -230,7 +252,7 @@ export default function EventsManager({ userRole }) {
                   Editar ✏️
                 </button>
                 <button
-                  onClick={() => handleDelete(ev._id)}
+                  onClick={() => handleDeleteClick(ev._id)}
                   className="btn-danger"
                 >
                   Eliminar 🗑️

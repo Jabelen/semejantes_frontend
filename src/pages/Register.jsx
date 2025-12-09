@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
-import "./Register.css"; // Importamos los nuevos estilos
+import { useNotification } from "../context/NotificationContext";
+import "./Register.css"; 
 import Header from "../components/Header";
 
 // Importamos la imagen de acción/voluntariado
 import registerBg from "../assets/foto3.jpeg"; 
 
 const Register = () => {
+  const { addNotification } = useNotification();
   const [role, setRole] = useState("Volunteer");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -46,19 +48,19 @@ const Register = () => {
 
       if (!response.ok) {
         if (data.errors) {
-          const errorMsg = data.errors.map((err) => err.msg).join("\n");
-          alert(`Error en los datos:\n${errorMsg}`);
+          const errorMsg = data.errors.map((err) => err.msg).join(". ");
+          addNotification(`Error en los datos: ${errorMsg}`, "error");
         } else {
-          alert(data.message || "Error al registrarse");
+          addNotification(data.message || "Error al registrarse", "error");
         }
         return;
       }
 
-      alert(data.message || "Registro exitoso. Tu cuenta está pendiente de aprobación.");
+      addNotification(data.message || "Registro exitoso. Tu cuenta está pendiente de aprobación.", "success");
       navigate("/login");
     } catch (error) {
       console.error("Error de conexión:", error);
-      alert("No se pudo conectar con el servidor.");
+      addNotification("No se pudo conectar con el servidor.", "error");
     }
   };
 

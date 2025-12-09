@@ -2,14 +2,16 @@ import { useState, useEffect } from "react";
 import Header from "../components/Header.jsx";
 import EventCard from "../components/EventCard.jsx";
 import FloatingButton from "../components/FloatingButton";
+import ConfirmModal from "../components/ConfirmModal";
+import { apiRequest } from "../utils/api";
+import { useNotification } from "../context/NotificationContext";
 import "./Events.css";
 
 export default function Events() {
+  const { addNotification } = useNotification();
   const [events, setEvents] = useState([]);
   const [user, setUser] = useState(null);
   const [showModal, setShowModal] = useState(false);
-
-  // Estado para saber si estamos editando
   const [editingId, setEditingId] = useState(null);
 
   const [formData, setFormData] = useState({
@@ -23,7 +25,8 @@ export default function Events() {
   });
   const [file, setFile] = useState(null);
 
-  const API_URL = import.meta.env.VITE_API_URL;
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [actionData, setActionData] = useState({ type: null, id: null });
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -33,22 +36,18 @@ export default function Events() {
 
   const fetchEvents = async () => {
     try {
-      const res = await fetch(`${API_URL}/api/events`);
-      const data = await res.json();
-      if (data.status === "success") {
-        const sorted = data.data.sort(
-          (a, b) => new Date(b.date) - new Date(a.date)
-        );
-        setEvents(sorted);
-      }
+      const res = await apiRequest("/api/events");
+      const sorted = res.data.sort(
+        (a, b) => new Date(b.date) - new Date(a.date)
+      );
+      setEvents(sorted);
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  // --- ABRIR MODAL PARA CREAR ---
   const openCreateModal = () => {
-    setEditingId(null); // Limpiamos ID
+    setEditingId(null);
     setFormData({
       title: "",
       description: "",
@@ -62,9 +61,8 @@ export default function Events() {
     setShowModal(true);
   };
 
-  // --- ABRIR MODAL PARA EDITAR (NUEVO) ---
   const openEditModal = (event) => {
-    setEditingId(event._id); // Guardamos el ID que estamos editando
+    setEditingId(event._id);
     setFormData({
       title: event.title,
       description: event.description,
@@ -78,49 +76,66 @@ export default function Events() {
     setShowModal(true);
   };
 
-  // --- ENVIAR FORMULARIO (CREAR O EDITAR) ---
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = localStorage.getItem("token");
-
     const data = new FormData();
     Object.keys(formData).forEach((key) => data.append(key, formData[key]));
     if (file) data.append("photos", file);
 
-    // Decidimos si es POST (Crear) o PUT (Editar)
-    const method = editingId ? "PUT" : "POST";
-    const endpoint = editingId ? `/api/events/${editingId}` : "/api/events";
-
     try {
-      const res = await fetch(`${API_URL}${endpoint}`, {
-        method: method,
-        headers: { Authorization: `Bearer ${token}` },
-        body: data,
-      });
-
-      if (res.ok) {
-        alert(editingId ? "Evento actualizado" : "Evento creado");
-        setShowModal(false);
-        fetchEvents();
+      if (editingId) {
+        await apiRequest(`/api/events/${editingId}`, "PUT", data, true);
+        addNotification("Evento actualizado correctamente", "success");
       } else {
-        const err = await res.json();
-        alert("Error: " + err.message);
+        await apiRequest("/api/events", "POST", data, true);
+        addNotification("Evento creado correctamente", "success");
       }
+      setShowModal(false);
+      fetchEvents();
     } catch (error) {
-      alert("Error de conexión");
+      addNotification(error.message, "error");
     }
   };
 
-  // ... (Tus otras funciones handleJoin, handleLeave, handleDelete siguen igual) ...
   const handleJoin = async (id) => {
-    /* Tu código de unirse */
+    try {
+      await apiRequest(`/api/events/${id}/participate`, "PATCH");
+      addNotification("¡Te has inscrito exitosamente!", "success");
+      fetchEvents();
+    } catch (error) {
+      addNotification(error.message, "error");
+    }
   };
-  const handleLeave = async (id) => {
-    /* Tu código de salirse */
+
+  const requestLeave = (id) => {
+    setActionData({ type: "leave", id });
+    setConfirmOpen(true);
   };
-  const handleDelete = async (id) => {
-    /* Tu código de borrar */
+
+  const requestDelete = (id) => {
+    setActionData({ type: "delete", id });
+    setConfirmOpen(true);
   };
+
+  const executeAction = async () => {
+    const { type, id } = actionData;
+    try {
+      if (type === "leave") {
+        await apiRequest(`/api/events/${id}/leave`, "PATCH");
+        addNotification("Inscripción cancelada", "info");
+      } else if (type === "delete") {
+        await apiRequest(`/api/events/${id}`, "DELETE");
+        addNotification("Evento eliminado", "success");
+      }
+      fetchEvents();
+    } catch (error) {
+      addNotification(error.message, "error");
+    } finally {
+      setConfirmOpen(false);
+      setActionData({ type: null, id: null });
+    }
+  };
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -128,18 +143,38 @@ export default function Events() {
   return (
     <div className="events-page">
       <Header />
-      <div className="events-container">
-        <h1>
-          {user?.role === "Coordinator"
-            ? "Gestión de Eventos"
-            : "Próximos Eventos"}
-        </h1>
 
-        {user?.role === "Coordinator" && (
-          <button className="create-btn" onClick={openCreateModal}>
-            + Crear Nuevo Evento
-          </button>
-        )}
+      <ConfirmModal
+        isOpen={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        onConfirm={executeAction}
+        title={actionData.type === "delete" ? "Eliminar Evento" : "Cancelar Inscripción"}
+        message={
+          actionData.type === "delete" 
+            ? "¿Estás seguro de que deseas eliminar este evento? No se podrá recuperar." 
+            : "¿Seguro que quieres abandonar este evento? Perderás tu cupo."
+        }
+      />
+
+      <div className="events-container">
+        
+        {/* --- HEADER CORREGIDO --- */}
+        <div style={{ textAlign: "left", marginBottom: "25px" }}>
+            <h1 style={{ margin: "0 0 10px 0", padding: "0" }}>
+              {user?.role === "Coordinator" ? "Gestión de Eventos" : "Próximos Eventos"}
+            </h1>
+
+            {user?.role === "Coordinator" && (
+              <button 
+                className="create-btn" 
+                onClick={openCreateModal}
+                style={{ marginLeft: "0" }} // Forzar alineación
+              >
+                + Crear Nuevo Evento
+              </button>
+            )}
+        </div>
+        {/* ------------------------ */}
 
         <div className="events-list">
           {events.length === 0 ? (
@@ -152,16 +187,15 @@ export default function Events() {
                 userRole={user?.role}
                 userId={user?.id}
                 onJoin={handleJoin}
-                onLeave={handleLeave}
-                onDelete={handleDelete}
-                onEdit={openEditModal} /* <--- PASAMOS LA FUNCIÓN */
+                onLeave={requestLeave}
+                onDelete={requestDelete}
+                onEdit={openEditModal}
               />
             ))
           )}
         </div>
       </div>
 
-      {/* MODAL REUTILIZABLE */}
       {showModal && (
         <div className="modal-overlay">
           <div className="modal-content">
