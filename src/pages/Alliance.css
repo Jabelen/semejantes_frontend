@@ -15,24 +15,51 @@
   padding-bottom: 80px;
 }
 
-/* --- HERO SECTION --- */
+/* --- HERO SECTION MODIFICADA (Estilo idéntico a About) --- */
 .alliance-hero {
+  position: relative; /* Necesario para que la imagen y texto se superpongan */
+  height: 350px;      /* Misma altura que en About */
+  width: 100%;
+  overflow: hidden;   /* Recorta la imagen si es muy grande */
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: var(--blue-deep);
-  color: var(--white);
-  padding: 60px 20px;
-  text-align: center;
-  border-radius: 0 0 50px 50px; /* Curva suave abajo */
   margin-bottom: 50px;
   box-shadow: 0 10px 20px rgba(26, 60, 109, 0.2);
 }
 
-.alliance-hero h1 {
+/* Estilo para la imagen de fondo */
+.alliance-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute; /* Se coloca detrás del texto */
+  top: 0;
+  left: 0;
+  
+  /* EFECTOS VISUALES (Copiados de About.css) */
+  opacity: 0.3; /* Transparencia para que se vea el fondo azul */
+  filter: sepia(20%) hue-rotate(190deg); /* Tinte azulado */
+}
+
+/* Contenedor del texto sobre la imagen */
+.alliance-hero-content {
+  position: relative;
+  z-index: 2; /* Asegura que el texto esté encima de la foto */
+  text-align: center;
+  color: var(--white);
+  padding: 20px;
+}
+
+.alliance-hero-content h1 {
   font-family: 'Georgia', serif;
   font-size: 3rem;
   margin: 0 0 10px 0;
+  text-shadow: 0 4px 6px rgba(0,0,0,0.5); /* Sombra para leerse mejor sobre la foto */
 }
 
-.alliance-hero h2 {
+.alliance-hero-content h2 {
   font-size: 1.2rem;
   font-weight: 300;
   opacity: 0.9;
@@ -43,8 +70,10 @@
 /* --- CONTENEDOR PRINCIPAL --- */
 .alliance-container {
   max-width: 900px;
-  margin: 0 auto;
+  margin: -30px auto 0; /* Subimos un poco el contenido para efecto visual (opcional) */
   padding: 0 20px;
+  position: relative;
+  z-index: 3;
 }
 
 /* Tarjeta de Texto Principal */
@@ -79,7 +108,6 @@
   display: inline-block;
 }
 
-/* Línea decorativa bajo el título */
 .partners-title::after {
   content: "";
   display: block;
@@ -94,26 +122,43 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 60px; /* Espacio generoso entre logos */
+  gap: 60px;
   flex-wrap: wrap;
 }
 
 .partner-logo {
-  max-width: 350px; /* Tamaño máximo para que se vean bien */
-  width: 100%;     /* Responsivo */
+  max-width: 350px;
+  width: 100%;
   height: auto;
-  filter: grayscale(10%); /* Un toque sutil para unificarlos */
+  filter: grayscale(10%);
   transition: transform 0.3s ease, filter 0.3s ease;
   padding: 10px;
   background: white;
   border-radius: 12px;
-  /* Opcional: si los logos no tienen fondo, esta sombra ayuda a enmarcarlos */
   box-shadow: 0 5px 15px rgba(0,0,0,0.05); 
 }
 
+.alliance-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Mantener esto para que cubra el área */
+  
+  /* --- AGREGA ESTA LÍNEA --- */
+  object-position: top; /* Esto fuerza a que se muestre desde la parte superior */
+  /* ----------------------- */
+  
+  position: absolute;
+  top: 0;
+  left: 0;
+  
+  /* Efectos visuales */
+  opacity: 0.3;
+  filter: sepia(20%) hue-rotate(190deg);
+}
+
 .partner-logo:hover {
-  transform: scale(1.05); /* Efecto zoom suave */
-  filter: grayscale(0%);  /* A todo color al pasar el mouse */
+  transform: scale(1.05);
+  filter: grayscale(0%);
   box-shadow: 0 8px 20px rgba(0,0,0,0.1);
 }
 

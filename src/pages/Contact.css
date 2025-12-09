@@ -16,24 +16,53 @@
   padding-bottom: 80px;
 }
 
-/* --- HERO SECTION (Nuevo estilo azul) --- */
+/* --- HERO SECTION MODIFICADA (Estilo idéntico a About) --- */
 .contact-hero {
+  position: relative; /* Necesario para superponer elementos */
+  height: 350px;      /* Misma altura que en About */
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background-color: var(--blue-deep);
-  color: var(--white);
-  padding: 60px 20px;
-  text-align: center;
-  border-radius: 0 0 50px 50px; /* La curva característica */
   margin-bottom: 50px;
+  /* Mantenemos el borde redondeado inferior si deseas conservarlo, o puedes quitarlo para ser idéntico a About */
+  border-radius: 0 0 50px 50px; 
   box-shadow: 0 10px 20px rgba(26, 60, 109, 0.2);
 }
 
-.contact-hero h1 {
+/* Imagen de fondo */
+.contact-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  
+  /* Filtros de estilo "About" */
+  opacity: 0.3; 
+  filter: sepia(20%) hue-rotate(190deg);
+}
+
+/* Contenido de texto */
+.contact-hero-content {
+  position: relative;
+  z-index: 2; /* Texto sobre la imagen */
+  text-align: center;
+  color: var(--white);
+  padding: 20px;
+}
+
+.contact-hero-content h1 {
   font-family: 'Georgia', serif;
   font-size: 3rem;
   margin: 0 0 10px 0;
+  text-shadow: 0 4px 6px rgba(0,0,0,0.3);
 }
 
-.contact-hero p {
+.contact-hero-content p {
   font-size: 1.2rem;
   font-weight: 300;
   opacity: 0.9;
@@ -75,7 +104,7 @@
 .contact-card:hover {
   transform: translateY(-10px);
   box-shadow: 0 15px 30px rgba(26, 60, 109, 0.2);
-  border-color: #2d89ef;
+  border-color: #2d89ef; /* Azul vibrante al pasar el mouse */
 }
 
 /* Iconos */
@@ -91,6 +120,24 @@
   margin-bottom: 5px;
 }
 
+.contact-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+  
+  /* --- CAMBIA ESTA LÍNEA --- */
+  object-position: center; /* Ahora la imagen se centrará vertical y horizontalmente */
+  /* ------------------------- */
+  
+  position: absolute;
+  top: 0;
+  left: 0;
+  
+  /* Filtros de estilo "About" */
+  opacity: 0.3; 
+  filter: sepia(20%) hue-rotate(190deg);
+}
+
 .card-action {
   color: #888;
   font-size: 0.9rem;
@@ -98,6 +145,6 @@
 
 /* Responsive */
 @media (max-width: 600px) {
-  .contact-hero h1 { font-size: 2.2rem; }
+  .contact-hero-content h1 { font-size: 2.2rem; }
   .contact-grid { grid-template-columns: 1fr; }
 }

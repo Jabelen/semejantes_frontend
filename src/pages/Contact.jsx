@@ -3,15 +3,28 @@ import Header from '../components/Header.jsx';
 import FloatingButton from "../components/FloatingButton";
 import './Contact.css';
 
+// Importamos la imagen de fondo solicitada
+import contactBg from "../assets/Contactanos_pic.jpeg";
+
 export default function Contact() {
     return(
         <div className="contact-page">
             <Header/>
             
-            {/* Hero Section con fondo azul */}
+            {/* HERO SECTION MODIFICADA (Estilo About) */}
             <div className="contact-hero">
-                <h1>Contáctanos</h1>
-                <p>Estamos a un clic de distancia</p>
+                {/* Imagen de fondo con filtros */}
+                <img 
+                    src={contactBg} 
+                    alt="Fondo Contacto" 
+                    className="contact-hero-img" 
+                />
+                
+                {/* Contenido de texto superpuesto */}
+                <div className="contact-hero-content">
+                    <h1>Contáctanos</h1>
+                    <p>Estamos a un clic de distancia</p>
+                </div>
             </div>
             
             <div className="contact-content">

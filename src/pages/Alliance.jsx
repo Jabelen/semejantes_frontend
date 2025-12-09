@@ -2,20 +2,33 @@ import Header from '../components/Header.jsx';
 import FloatingButton from "../components/FloatingButton";
 import './Alliance.css';
 
-// CAMBIO: Importamos logo_alianza en lugar de logo_semejantes
+// Importamos los logos existentes
 import logoAlianza from "../assets/logo_alianza.jpg"; 
-// Importamos el otro logo partner
 import logoJoni from "../assets/logo_jonifriends.png"; 
+
+// IMPORTANTE: Importamos la imagen de fondo que solicitaste
+// Asegúrate de que el archivo exista en src/assets/alianzas_pic.jpeg
+import alianzasBg from "../assets/alianzas_pic.jpeg"; 
 
 export default function Alliance() {
     return(
         <div className="alliance-page">
             <Header/>
             
-            {/* HERO SECTION */}
+            {/* HERO SECTION MODIFICADA (Estilo About) */}
             <div className="alliance-hero">
-                <h1>Alianzas y Apoyo</h1>
-                <h2>Unidos por un propósito mayor</h2>
+                {/* Imagen de fondo con filtros */}
+                <img 
+                    src={alianzasBg} 
+                    alt="Fondo Alianzas" 
+                    className="alliance-hero-img" 
+                />
+                
+                {/* Contenido de texto superpuesto */}
+                <div className="alliance-hero-content">
+                    <h1>Alianzas y Apoyo</h1>
+                    <h2>Unidos por un propósito mayor</h2>
+                </div>
             </div>
 
             <div className="alliance-container">
@@ -36,7 +49,7 @@ export default function Alliance() {
 
                 {/* SECCIÓN DE LOGOS LADO A LADO */}
                 <div className="partners-section">
-                    
+                    <h3 className="partners-title">Nuestros Aliados</h3>
                     <div className="logos-grid">
                         {/* Logo 1: Alianza Cristiana y Misionera */}
                         <img 
