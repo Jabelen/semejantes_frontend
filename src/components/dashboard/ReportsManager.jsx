@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { apiRequest } from "../../utils/api";
-import "./ReportsManager.css"; // Importar el nuevo CSS
+import { useNotification } from "../../context/NotificationContext";
+import "./ReportsManager.css";
 
 export default function ReportsManager() {
-  const [step, setStep] = useState("menu"); // menu | filters | result
+  const { addNotification } = useNotification();
+  const [step, setStep] = useState("menu");
   const [reportType, setReportType] = useState(null);
 
   const [year, setYear] = useState(new Date().getFullYear());
@@ -33,7 +35,7 @@ export default function ReportsManager() {
       setStats(res.data);
       setStep("result");
     } catch (err) {
-      alert("Error al generar reporte: " + err.message);
+      addNotification("Error al generar reporte: " + err.message, "error");
     } finally {
       setLoading(false);
     }
@@ -45,7 +47,6 @@ export default function ReportsManager() {
     setStats(null);
   };
 
-  // Mapa para mostrar nombre del mes en el título
   const monthNames = [
     "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
     "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"
@@ -59,7 +60,6 @@ export default function ReportsManager() {
       {/* --- PASO 1: MENÚ DE SELECCIÓN --- */}
       {step === "menu" && (
         <div className="reports-menu-grid">
-          
           <div className="report-option-card" onClick={() => handleSelectType("monthly")}>
             <span className="report-icon">📅</span>
             <h3>Reporte Mensual</h3>
@@ -71,7 +71,6 @@ export default function ReportsManager() {
             <h3>Reporte Anual</h3>
             <p>Resumen general del año completo. Visión macro de la gestión.</p>
           </div>
-
         </div>
       )}
 
@@ -135,7 +134,6 @@ export default function ReportsManager() {
       {/* --- PASO 3: RESULTADOS --- */}
       {step === "result" && stats && (
         <div className="results-section">
-          
           <div className="results-header">
             <h3>
               {reportType === "annual" 
@@ -148,19 +146,16 @@ export default function ReportsManager() {
           </div>
 
           <div className="stats-grid">
-            {/* Tarjeta de Eventos */}
             <div className="stat-card green">
               <h1 className="stat-number">{stats.totalEvents}</h1>
               <span className="stat-label">Eventos Realizados</span>
             </div>
 
-            {/* Tarjeta de Horas */}
             <div className="stat-card yellow">
               <h1 className="stat-number">{stats.totalHoursContributed}</h1>
               <span className="stat-label">Horas Aportadas</span>
             </div>
           </div>
-
         </div>
       )}
     </div>

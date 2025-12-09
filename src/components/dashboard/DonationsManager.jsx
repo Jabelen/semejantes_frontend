@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
 import { apiRequest } from "../../utils/api";
+import { useNotification } from "../../context/NotificationContext";
+import ConfirmModal from "../ConfirmModal";
 import "./DonationsManager.css";
 
 export default function DonationsManager({ userRole }) {
+  const { addNotification } = useNotification();
   const [items, setItems] = useState([]);
 
   const [newItem, setNewItem] = useState({
@@ -20,6 +23,10 @@ export default function DonationsManager({ userRole }) {
     beneficiaryPhone: "",
   });
 
+  // Estado para el Modal de Confirmación
+  const [modalOpen, setModalOpen] = useState(false);
+  const [itemToDelete, setItemToDelete] = useState(null);
+
   useEffect(() => {
     loadItems();
   }, []);
@@ -33,20 +40,23 @@ export default function DonationsManager({ userRole }) {
       setItems(sorted);
     } catch (err) {
       console.error(err);
+      addNotification("Error al cargar donaciones", "error");
     }
   };
 
   const handleCreate = async (e) => {
     e.preventDefault();
     if (!newItem.itemName || !newItem.type || !newItem.donorName) {
-      alert(
-        "Por favor completa los campos obligatorios (Ítem, Tipo y Nombre Donante)"
+      addNotification(
+        "Por favor completa los campos obligatorios (Ítem, Tipo y Nombre Donante)",
+        "info"
       );
       return;
     }
 
     try {
       await apiRequest("/api/donations", "POST", newItem);
+      addNotification("Donación registrada exitosamente", "success");
       loadItems();
       setNewItem({
         itemName: "",
@@ -56,19 +66,20 @@ export default function DonationsManager({ userRole }) {
         donorPhone: "",
       });
     } catch (err) {
-      alert(err.message);
+      addNotification(err.message, "error");
     }
   };
 
   const handleDeliver = async () => {
     if (!delivery.beneficiaryName) {
-      alert("El nombre del beneficiario es obligatorio");
+      addNotification("El nombre del beneficiario es obligatorio", "info");
       return;
     }
 
     try {
       const { id, ...dataToSend } = delivery;
       await apiRequest(`/api/donations/${id}`, "PUT", dataToSend);
+      addNotification("Entrega registrada correctamente", "success");
       loadItems();
       setDelivery({
         id: null,
@@ -77,27 +88,41 @@ export default function DonationsManager({ userRole }) {
         beneficiaryPhone: "",
       });
     } catch (err) {
-      alert("Error al entregar: " + err.message);
+      addNotification("Error al entregar: " + err.message, "error");
     }
   };
 
-  const handleDelete = async (id) => {
-    if (
-      !confirm(
-        "¿Estás seguro de eliminar esta donación? Esta acción no se puede deshacer."
-      )
-    )
-      return;
+  // Paso 1: Abrir Modal
+  const requestDelete = (id) => {
+    setItemToDelete(id);
+    setModalOpen(true);
+  };
+
+  // Paso 2: Ejecutar eliminación
+  const executeDelete = async () => {
+    if (!itemToDelete) return;
     try {
-      await apiRequest(`/api/donations/${id}`, "DELETE");
+      await apiRequest(`/api/donations/${itemToDelete}`, "DELETE");
+      addNotification("Donación eliminada correctamente", "success");
       loadItems();
     } catch (err) {
-      alert("Error al eliminar: " + err.message);
+      addNotification("Error al eliminar: " + err.message, "error");
+    } finally {
+      setModalOpen(false);
+      setItemToDelete(null);
     }
   };
 
   return (
     <div className="donations-manager-container">
+      <ConfirmModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        onConfirm={executeDelete}
+        title="Eliminar Donación"
+        message="¿Estás seguro de eliminar esta donación del registro? Esta acción no se puede deshacer."
+      />
+
       <h2 className="donations-title">Inventario y Donaciones</h2>
       <p className="donations-subtitle">
         Gestiona los recursos disponibles para la comunidad
@@ -324,7 +349,7 @@ export default function DonationsManager({ userRole }) {
                           Entregar
                         </button>
                         <button
-                          onClick={() => handleDelete(item._id)}
+                          onClick={() => requestDelete(item._id)}
                           className="btn-cancel"
                           title="Eliminar Donación"
                         >
@@ -334,7 +359,7 @@ export default function DonationsManager({ userRole }) {
                     )
                   ) : (
                     <button
-                      onClick={() => handleDelete(item._id)}
+                      onClick={() => requestDelete(item._id)}
                       className="btn-cancel"
                       style={{ width: "100%", marginTop: "10px" }}
                     >

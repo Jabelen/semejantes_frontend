@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
 import { apiRequest } from "../../utils/api";
+import { useNotification } from "../../context/NotificationContext";
+import ConfirmModal from "../ConfirmModal";
 import "./RequestsManager.css";
 
 export default function RequestsManager({ userRole }) {
+  const { addNotification } = useNotification();
   const [requests, setRequests] = useState([]);
 
   const [formData, setFormData] = useState({
@@ -12,6 +15,14 @@ export default function RequestsManager({ userRole }) {
     beneficiaryAge: "",
     beneficiaryPhone: "",
     beneficiaryEmail: "",
+  });
+
+  // Estado para confirmaciones (Aprobar, Rechazar, Eliminar)
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [actionData, setActionData] = useState({
+    type: null, // 'resolve' | 'delete'
+    id: null,
+    status: null, // Solo para 'resolve' (approved/rejected)
   });
 
   useEffect(() => {
@@ -27,6 +38,7 @@ export default function RequestsManager({ userRole }) {
       setRequests(sorted);
     } catch (err) {
       console.error(err);
+      addNotification("Error cargando solicitudes", "error");
     }
   };
 
@@ -34,7 +46,10 @@ export default function RequestsManager({ userRole }) {
     e.preventDefault();
     try {
       await apiRequest("/api/requests", "POST", formData);
-      alert("Solicitud enviada correctamente. Estaremos en contacto.");
+      addNotification(
+        "Solicitud enviada correctamente. Estaremos en contacto.",
+        "success"
+      );
 
       if (userRole === "Coordinator") loadRequests();
 
@@ -47,40 +62,66 @@ export default function RequestsManager({ userRole }) {
         beneficiaryEmail: "",
       });
     } catch (err) {
-      alert(err.message);
+      addNotification(err.message, "error");
     }
   };
 
-  const handleResolve = async (id, status) => {
-    if (
-      !confirm(
-        `¿Confirmas cambiar el estado a: ${
-          status === "approved" ? "Aprobado" : "Rechazado"
-        }?`
-      )
-    )
-      return;
+  // --- Lógica de Confirmación ---
+  const handleResolveClick = (id, status) => {
+    setActionData({ type: "resolve", id, status });
+    setConfirmOpen(true);
+  };
+
+  const handleDeleteClick = (id) => {
+    setActionData({ type: "delete", id });
+    setConfirmOpen(true);
+  };
+
+  const executeAction = async () => {
+    const { type, id, status } = actionData;
     try {
-      await apiRequest(`/api/requests/${id}/resolve`, "PATCH", { status });
+      if (type === "resolve") {
+        await apiRequest(`/api/requests/${id}/resolve`, "PATCH", { status });
+        addNotification(
+          `Solicitud ${status === "approved" ? "aprobada" : "rechazada"}`,
+          "success"
+        );
+      } else if (type === "delete") {
+        await apiRequest(`/api/requests/${id}`, "DELETE");
+        addNotification("Solicitud eliminada", "success");
+      }
       loadRequests();
     } catch (err) {
-      alert(err.message);
+      addNotification(err.message, "error");
+    } finally {
+      setConfirmOpen(false);
+      setActionData({ type: null, id: null, status: null });
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!confirm("¿Estás seguro de eliminar esta solicitud permanentemente?"))
-      return;
-    try {
-      await apiRequest(`/api/requests/${id}`, "DELETE");
-      loadRequests();
-    } catch (err) {
-      alert("Error al eliminar: " + err.message);
-    }
+  // Texto dinámico para el modal
+  const getModalMessage = () => {
+    if (actionData.type === "delete")
+      return "¿Estás seguro de eliminar esta solicitud permanentemente?";
+    if (actionData.type === "resolve")
+      return `¿Confirmas cambiar el estado a: ${
+        actionData.status === "approved" ? "Aprobado" : "Rechazado"
+      }?`;
+    return "";
   };
 
   return (
     <div className="requests-manager-container">
+      <ConfirmModal
+        isOpen={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        onConfirm={executeAction}
+        title={
+          actionData.type === "delete" ? "Eliminar Solicitud" : "Confirmar Acción"
+        }
+        message={getModalMessage()}
+      />
+
       <h2 className="requests-title">
         {userRole === "Coordinator"
           ? "Gestión de Solicitudes"
@@ -218,7 +259,7 @@ export default function RequestsManager({ userRole }) {
                         <button
                           className="btn-mini btn-reject"
                           style={{ padding: "2px 6px", fontSize: "0.7rem" }}
-                          onClick={() => handleDelete(req._id)}
+                          onClick={() => handleDeleteClick(req._id)}
                           title="Eliminar Solicitud"
                         >
                           🗑️
@@ -241,13 +282,13 @@ export default function RequestsManager({ userRole }) {
                     {req.status === "pending" && (
                       <div className="req-actions">
                         <button
-                          onClick={() => handleResolve(req._id, "approved")}
+                          onClick={() => handleResolveClick(req._id, "approved")}
                           className="btn-mini btn-approve"
                         >
                           ✓ Aprobar
                         </button>
                         <button
-                          onClick={() => handleResolve(req._id, "rejected")}
+                          onClick={() => handleResolveClick(req._id, "rejected")}
                           className="btn-mini btn-reject"
                         >
                           ✕ Rechazar

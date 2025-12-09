@@ -1,10 +1,17 @@
 import { useState, useEffect } from "react";
 import { apiRequest } from "../../utils/api";
-import "./UsersManager.css"; // Importamos el nuevo CSS
+import { useNotification } from "../../context/NotificationContext";
+import ConfirmModal from "../ConfirmModal";
+import "./UsersManager.css";
 
 export default function UsersManager() {
+  const { addNotification } = useNotification();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Estados para ConfirmModal
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [actionData, setActionData] = useState({ id: null, status: null });
 
   useEffect(() => {
     loadUsers();
@@ -13,29 +20,37 @@ export default function UsersManager() {
   const loadUsers = async () => {
     try {
       const res = await apiRequest("/api/users");
-      // Filtrar solo usuarios con estado 'pending'
       setUsers(res.data.filter((u) => u.status === "pending"));
     } catch (err) {
       console.error(err);
+      addNotification("Error cargando usuarios", "error");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleStatus = async (id, status) => {
-    const actionText = status === "active" ? "aprobar" : "rechazar";
-    if (!confirm(`¿Estás seguro de ${actionText} a este usuario?`)) return;
+  const handleStatusClick = (id, status) => {
+    setActionData({ id, status });
+    setConfirmOpen(true);
+  };
 
+  const executeStatusChange = async () => {
+    const { id, status } = actionData;
     try {
       await apiRequest(`/api/users/${id}/status`, "PATCH", { status });
-      // Recargar lista para reflejar cambios
+      addNotification(
+        `Usuario ${status === "active" ? "aprobado" : "rechazado"} correctamente`,
+        "success"
+      );
       loadUsers();
     } catch (err) {
-      alert(err.message);
+      addNotification(err.message, "error");
+    } finally {
+      setConfirmOpen(false);
+      setActionData({ id: null, status: null });
     }
   };
 
-  // Función para obtener las iniciales del nombre (Ej: "Juan Perez" -> "JP")
   const getInitials = (name) => {
     if (!name) return "?";
     return name
@@ -48,8 +63,20 @@ export default function UsersManager() {
 
   return (
     <div className="users-manager-container">
+      <ConfirmModal
+        isOpen={confirmOpen}
+        onClose={() => setConfirmOpen(false)}
+        onConfirm={executeStatusChange}
+        title="Confirmar Acción"
+        message={`¿Estás seguro de que deseas ${
+          actionData.status === "active" ? "aprobar" : "rechazar"
+        } a este usuario?`}
+      />
+
       <h2 className="users-title">Usuarios Pendientes</h2>
-      <p className="users-subtitle">Gestiona las nuevas solicitudes de acceso a la plataforma</p>
+      <p className="users-subtitle">
+        Gestiona las nuevas solicitudes de acceso a la plataforma
+      </p>
 
       {loading && <p className="empty-state">Cargando usuarios...</p>}
 
@@ -63,28 +90,24 @@ export default function UsersManager() {
       <div className="users-grid">
         {users.map((u) => (
           <div key={u.id} className="user-card">
-            
-            {/* Avatar Visual */}
-            <div className="user-avatar-circle">
-              {getInitials(u.username)}
-            </div>
+            <div className="user-avatar-circle">{getInitials(u.username)}</div>
 
             <h3 className="user-name">{u.username}</h3>
             <p className="user-email">{u.email}</p>
-            
+
             <span className="user-role-badge">
               {u.role === "Coordinator" ? "Coordinador" : "Voluntario"}
             </span>
 
             <div className="user-actions">
               <button
-                onClick={() => handleStatus(u.id, "active")}
+                onClick={() => handleStatusClick(u.id, "active")}
                 className="btn-user-action btn-approve"
               >
                 Aprobar
               </button>
               <button
-                onClick={() => handleStatus(u.id, "rejected")}
+                onClick={() => handleStatusClick(u.id, "rejected")}
                 className="btn-user-action btn-reject"
               >
                 Rechazar

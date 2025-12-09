@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { jsPDF } from "jspdf";
 import { formatChileDate } from "../utils/dateHelper";
+import { useNotification } from "../context/NotificationContext";
 import "./Profile.css";
 
 export default function Profile() {
+  const { addNotification } = useNotification();
   const [userData, setUserData] = useState(null);
   const [myActivity, setMyActivity] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -54,42 +56,38 @@ export default function Profile() {
         }
       } catch (error) {
         console.error("Error perfil:", error);
+        addNotification("Error al cargar perfil", "error");
       } finally {
         setLoading(false);
       }
     };
     fetchProfileData();
-  }, [navigate, API_URL]);
+  }, [navigate, API_URL, addNotification]);
 
-  // --- FUNCIÓN DE FECHAS CORREGIDA (TODOTERRENO) ---
+  // --- FUNCIÓN DE FECHAS ---
   const isEventPassed = (dateString, timeString) => {
     if (!dateString) return false;
     const now = new Date();
 
-    // 1. Intentamos crear la fecha directamente (Maneja formato largo "Wed Dec 25..." y "2024-12-25")
     let eventDate = new Date(dateString);
 
-    // 2. Si es inválida (NaN) o es formato simple YYYY-MM-DD (que a veces falla por zona horaria), lo hacemos manual
     if (
       isNaN(eventDate.getTime()) ||
       (typeof dateString === "string" &&
         dateString.match(/^\d{4}-\d{2}-\d{2}$/))
     ) {
-      // Solo tomamos los primeros 10 caracteres para limpiar residuos ISO
       const cleanDate = dateString.substring(0, 10);
       const [year, month, day] = cleanDate.split("-").map(Number);
       eventDate = new Date(year, month - 1, day);
     }
 
-    // 3. Aplicamos la hora exacta
     if (timeString && timeString.includes(":")) {
       const [hours, minutes] = timeString.split(":").map(Number);
       eventDate.setHours(hours, minutes, 0, 0);
     } else {
-      eventDate.setHours(23, 59, 59, 999); // Final del día
+      eventDate.setHours(23, 59, 59, 999);
     }
 
-    // 4. Comparar
     return now > eventDate;
   };
 
@@ -192,11 +190,12 @@ export default function Profile() {
         });
 
         doc.save(`Certificado_${eventId}.pdf`);
+        addNotification("Certificado descargado correctamente", "success");
       } else {
-        alert("Error: " + json.message);
+        addNotification("Error: " + json.message, "error");
       }
     } catch (err) {
-      alert("Error generando certificado");
+      addNotification("Error generando certificado", "error");
     }
   };
 
